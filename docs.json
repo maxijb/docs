@@ -1,56 +1,143 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "BitSetJS",
   "theme": "luma",
+  "name": "BitSetJS",
+  "description": "Memory-efficient bit arrays for JavaScript.",
   "colors": {
     "primary": "#2563EB",
     "light": "#DBEAFE",
     "dark": "#1E3A8A"
   },
   "favicon": "/favicon.svg",
+  "metadata": {
+    "og:image": "/logo/og.png"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "introduction",
+              "installation",
+              {
+                "group": "Basics",
+                "pages": [
+                  "quickstart",
+                  {
+                    "group": "Runtimes",
+                    "icon": "server",
+                    "pages": [
+                      "guides/node-usage",
+                      "guides/bun",
+                      {
+                        "group": "Edge runtimes",
+                        "pages": [
+                          "guides/deno-runtime"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Concepts",
+            "icon": "book",
+            "pages": [
+              "concepts/bitset-basics",
+              "guides/memory-model"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Core API",
+            "icon": "brackets-curly",
+            "pages": [
+              "api/constructor",
+              "api/bit-operations"
+            ]
+          },
+          {
+            "group": "Serialization",
+            "icon": "code",
+            "pages": [
+              "api/serialization",
+              "api/utilities",
+              "quickstart"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Browser",
+            "pages": [
+              "guides/browser-usage",
+              "guides/typescript"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Benchmarks",
+        "pages": [
+          "Benchmarks"
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "api": {
+    "openapi": [
+      "openapi.yml"
+    ],
+    "playground": {
+      "display": "interactive",
+      "proxy": false
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view"
+    ]
+  },
   "navbar": {
+    "links": [
+      {
+        "label": "Community",
+        "href": "https://example.com/community"
+      }
+    ],
     "primary": {
       "type": "github",
       "href": "https://github.com/maxijb/BitSetJS"
     }
   },
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Get Started",
-        "pages": [
-          {
-            "group": "Basics",
-            "pages": [
-              "quickstart"
-            ]
-          },
-          "introduction",
-          "installation"
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "pages": [
-          "api/constructor",
-          "concepts/bitset-basics",
-          "guides/memory-model",
-          "api/bit-operations",
-          "api/serialization"
-        ]
-      },
-      {
-        "tab": "Guides",
-        "pages": [
-          "Benchmarks",
-          "guides/browser-usage",
-          "guides/node-usage",
-          "guides/bun",
-          "guides/typescript",
-          "guides/deno-runtime"
-        ]
-      }
-    ]
+  "footer": {
+    "socials": {
+      "x": "https://x.com/example",
+      "github": "https://github.com/maxijb/BitSetJS"
+    }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-TEST000000"
+    }
   },
   "redirects": [
     {
@@ -64,6 +151,22 @@
     {
       "source": "/how-to/:slug*",
       "destination": "/guides/:slug*"
+    },
+    {
+      "source": "/faq/:slug*",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/docs/getting-started",
+      "destination": "/installation"
+    },
+    {
+      "source": "/api/v1/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/runtimes/deno",
+      "destination": "/guides/deno-runtime"
     }
   ]
 }
