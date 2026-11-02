@@ -19,8 +19,12 @@
       {
         "tab": "Get Started",
         "pages": [
-          "api/utilities",
-          "quickstart",
+          {
+            "group": "Basics",
+            "pages": [
+              "quickstart"
+            ]
+          },
           "introduction",
           "installation"
         ]
@@ -38,6 +42,7 @@
       {
         "tab": "Guides",
         "pages": [
+          "Benchmarks",
           "guides/browser-usage",
           "guides/node-usage",
           "guides/bun",

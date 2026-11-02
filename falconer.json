@@ -45,8 +45,12 @@
       {
         "tab": "Get Started",
         "pages": [
-          "api/utilities.mdx",
-          "quickstart.mdx",
+          {
+            "group": "Basics",
+            "pages": [
+              "quickstart.mdx"
+            ]
+          },
           "introduction.mdx",
           "installation.mdx"
         ]
@@ -54,9 +58,9 @@
       {
         "tab": "API Reference",
         "pages": [
+          "api/constructor.mdx",
           "concepts/bitset-basics.mdx",
           "guides/memory-model.mdx",
-          "api/constructor.mdx",
           "api/bit-operations.mdx",
           "api/serialization.mdx"
         ]
@@ -64,14 +68,12 @@
       {
         "tab": "Guides",
         "pages": [
+          "Benchmarks.mdx",
           "guides/browser-usage.mdx",
-          "guides/commonjs-usage.mdx",
-          {
-            "group": "Advanced",
-            "pages": [
-              "guides/es5-compatibility.mdx"
-            ]
-          }
+          "guides/node-usage.mdx",
+          "guides/bun.mdx",
+          "guides/typescript.mdx",
+          "guides/deno-runtime.mdx"
         ]
       }
     ]
