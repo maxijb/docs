@@ -4,7 +4,7 @@ sidebarTitle: "Quickstart"
 description: "Create your first BitSet, flip individual bits, count set bits, and serialize to a binary string — all in a few lines of JavaScript."
 ---
 
-This guide walks you through the most common BitSetJS operations from first install to a working bit array. By the end you will know how to create a BitSet, set and inspect individual bits, serialize the result to a binary string, count the set bits, and invert the entire array — the core building blocks for nearly every use case.
+This guide walks you through the most common BitSetJS operations from first install to a working bit array. By the end you will know how to create a BitSet, set and inspect individual bits, serialize the result to a binary string, count the set bits, and invert the entire array — the core building blocks for nearly every use case. It takes about five minutes.
 
 <Steps>
   <Step title="Install the package">
@@ -20,7 +20,6 @@ This guide walks you through the most common BitSetJS operations from first inst
     const BitSet = require('bit-set-js');
     ```
   </Step>
-
   <Step title="Create a BitSet">
     Call the constructor with the number of bits you need. The following example creates an 8-bit array with all bits initialised to `0`:
 
@@ -37,7 +36,6 @@ This guide walks you through the most common BitSetJS operations from first inst
     console.log(allSet.stringify()); // "11111111"
     ```
   </Step>
-
   <Step title="Set and get bits">
     Use `set(n)` to turn bit `n` on and `get(n)` to read its current value. Bit indices start at `0`.
 
@@ -55,7 +53,6 @@ This guide walks you through the most common BitSetJS operations from first inst
       You can also use `clear(n)` to force a bit to `0` and `toggle(n)` to flip a bit from its current state without knowing whether it is currently on or off.
     </Note>
   </Step>
-
   <Step title="Stringify the BitSet">
     Call `stringify()` to get a binary string representation. The rightmost character represents bit `0`, so the string reads from most-significant to least-significant:
 
@@ -73,7 +70,6 @@ This guide walks you through the most common BitSetJS operations from first inst
     console.log(restored.get(3)); // true
     ```
   </Step>
-
   <Step title="Count set bits">
     `count()` returns the total number of bits currently set to `1`. After setting bits `0` and `3`:
 
@@ -83,7 +79,6 @@ This guide walks you through the most common BitSetJS operations from first inst
 
     This is handy for quickly checking how many permissions are active, how many features are enabled, or how many items are selected in a large list.
   </Step>
-
   <Step title="Invert the BitSet">
     `invert()` flips every bit in the array and returns the same BitSet instance, so you can chain calls:
 
