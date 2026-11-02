@@ -39,10 +39,10 @@
         "tab": "Guides",
         "pages": [
           "guides/browser-usage",
-          "guides/commonjs-usage",
+          "guides/node-usage",
+          "guides/bun",
           "guides/typescript",
-          "guides/deno-runtime",
-          "guides/bun"
+          "guides/deno-runtime"
         ]
       }
     ]
