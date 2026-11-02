@@ -1,0 +1,152 @@
+---
+title: "BitSetJS Quickstart: Your First Bit Array in 5 Minutes"
+sidebarTitle: "Quickstart"
+description: "Create your first BitSet, flip individual bits, count set bits, and serialize to a binary string — all in a few lines of JavaScript."
+---
+
+This guide walks you through the most common BitSetJS operations from first install to a working bit array. By the end you will know how to create a BitSet, set and inspect individual bits, serialize the result to a binary string, count the set bits, and invert the entire array — the core building blocks for nearly every use case.
+
+<Steps>
+  <Step title="Install the package">
+    Add `bit-set-js` to your project with npm:
+
+    ```bash
+    npm install bit-set-js
+    ```
+
+    Then require it at the top of your file:
+
+    ```javascript
+    const BitSet = require('bit-set-js');
+    ```
+  </Step>
+
+  <Step title="Create a BitSet">
+    Call the constructor with the number of bits you need. The following example creates an 8-bit array with all bits initialised to `0`:
+
+    ```javascript
+    const flags = new BitSet(8);
+    // Internal state: 00000000 (8 bits, all zero)
+    console.log(flags.length); // 8
+    ```
+
+    You can also pass a second argument of `1` to initialise every bit to `1` instead:
+
+    ```javascript
+    const allSet = new BitSet(8, 1);
+    console.log(allSet.stringify()); // "11111111"
+    ```
+  </Step>
+
+  <Step title="Set and get bits">
+    Use `set(n)` to turn bit `n` on and `get(n)` to read its current value. Bit indices start at `0`.
+
+    ```javascript
+    flags.set(0); // turn on bit 0 (rightmost position)
+    flags.set(3); // turn on bit 3
+
+    console.log(flags.get(1)); // false — bit 1 is still 0
+    console.log(flags.get(3)); // true  — bit 3 was just set
+    ```
+
+    `set(n)` returns `true` when the operation succeeds and `false` when the index is out of range. `get(n)` returns a boolean, or `null` if the index is out of range.
+
+    <Note>
+      You can also use `clear(n)` to force a bit to `0` and `toggle(n)` to flip a bit from its current state without knowing whether it is currently on or off.
+    </Note>
+  </Step>
+
+  <Step title="Stringify the BitSet">
+    Call `stringify()` to get a binary string representation. The rightmost character represents bit `0`, so the string reads from most-significant to least-significant:
+
+    ```javascript
+    console.log(flags.stringify()); // "00001001"
+    //                                        ^-- bit 0
+    //                                    ^-- bit 3
+    ```
+
+    With bits `0` and `3` set on an 8-bit array, you get `"00001001"`. You can also go the other direction — pass a binary string to the constructor to rebuild a BitSet from its serialized form:
+
+    ```javascript
+    const restored = new BitSet("00001001");
+    console.log(restored.get(0)); // true
+    console.log(restored.get(3)); // true
+    ```
+  </Step>
+
+  <Step title="Count set bits">
+    `count()` returns the total number of bits currently set to `1`. After setting bits `0` and `3`:
+
+    ```javascript
+    console.log(flags.count()); // 2
+    ```
+
+    This is handy for quickly checking how many permissions are active, how many features are enabled, or how many items are selected in a large list.
+  </Step>
+
+  <Step title="Invert the BitSet">
+    `invert()` flips every bit in the array and returns the same BitSet instance, so you can chain calls:
+
+    ```javascript
+    flags.invert();
+    console.log(flags.stringify()); // "11110110"
+    console.log(flags.count());     // 6
+    ```
+
+    The two bits that were `1` (positions `0` and `3`) are now `0`, and the six bits that were `0` are now `1`.
+  </Step>
+</Steps>
+
+## Complete example
+
+Here is everything from the steps above in a single runnable script:
+
+```javascript
+const BitSet = require('bit-set-js');
+
+// 1. Create an 8-bit array, all zeros
+const flags = new BitSet(8);
+console.log(flags.length);       // 8
+
+// 2. Set individual bits
+flags.set(0);
+flags.set(3);
+
+// 3. Read bits back
+console.log(flags.get(1));       // false
+console.log(flags.get(3));       // true
+
+// 4. Serialize to a binary string
+console.log(flags.stringify());  // "00001001"
+
+// 5. Count set bits
+console.log(flags.count());      // 2
+
+// 6. Invert the entire array
+flags.invert();
+console.log(flags.stringify());  // "11110110"
+console.log(flags.count());      // 6
+
+// 7. Access the raw backing integers (useful for network transfer)
+const raw = flags.getData();     // array of 32-bit integers
+const copy = new BitSet(raw);    // reconstruct from the integer array
+console.log(copy.stringify());   // "11110110"
+```
+
+<Tip>
+  Save a round-trip cost when transferring state over a network: call `getData()` to get the compact integer array, send it as JSON, and reconstruct the BitSet on the other end with `new BitSet(intArray)`. This is far smaller than sending the full binary string for large arrays.
+</Tip>
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Constructor reference" icon="hammer" href="/api/constructor">
+    All three constructor signatures — size + default value, binary string, and integer array — with full parameter descriptions.
+  </Card>
+  <Card title="Bit operations" icon="toggle-on" href="/api/bit-operations">
+    Complete reference for `set`, `get`, `clear`, `toggle`, `invert`, `count`, and their return values.
+  </Card>
+  <Card title="BitSet fundamentals" icon="book-open" href="/concepts/bitset-basics">
+    A deeper look at how 32-bit integer packing works and when to choose a BitSet over a plain boolean array.
+  </Card>
+</CardGroup>

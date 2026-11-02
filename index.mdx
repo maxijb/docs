@@ -1,0 +1,80 @@
+---
+title: "BitSetJS: Memory-Efficient Bit Arrays for JavaScript"
+sidebarTitle: "Home"
+description: "BitSetJS is a JavaScript library for creating and manipulating bit arrays. Store thousands of boolean flags in a tiny memory footprint using 32-bit integer packing."
+---
+
+BitSetJS gives you a fast, memory-efficient `BitSet` class for JavaScript. Whether you need to track feature flags, permission sets, or any large collection of on/off values, BitSetJS packs your bits into 32-bit integers so you use a fraction of the memory of a plain boolean array.
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install via npm or drop in a script tag for the browser
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Create your first BitSet and start flipping bits in minutes
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/constructor">
+    Full reference for every constructor overload and method
+  </Card>
+  <Card title="Core Concepts" icon="book" href="/concepts/bitset-basics">
+    Learn how bit arrays work and when to use them
+  </Card>
+</CardGroup>
+
+## What is a BitSet?
+
+A `BitSet` is an ordered array of bits — each element is either `0` (false) or `1` (true). BitSetJS stores those bits compactly inside 32-bit integers, so a 1000-bit array uses just 32 integers instead of 1000 individual values.
+
+```javascript
+import BitSet from 'bit-set-js';         // ES6 / CommonJS
+
+const flags = new BitSet(8);             // 8-bit array, all 0s
+flags.set(0);                            // turn on bit 0
+flags.set(3);                            // turn on bit 3
+console.log(flags.stringify());          // "00001001"
+console.log(flags.count());             // 2
+```
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Bit Operations" icon="toggle-on" href="/api/bit-operations">
+    Get, set, clear, and toggle individual bits by index
+  </Card>
+  <Card title="Serialization" icon="arrows-rotate" href="/api/serialization">
+    Convert to and from binary strings or integer arrays
+  </Card>
+  <Card title="Memory Efficient" icon="microchip" href="/concepts/memory-model">
+    32-bit integer packing keeps your footprint minimal
+  </Card>
+  <Card title="Universal" icon="globe" href="/guides/browser-usage">
+    Works in the browser and in Node.js out of the box
+  </Card>
+</CardGroup>
+
+<Steps>
+  <Step title="Install the library">
+    ```bash
+    npm install bit-set-js
+    ```
+  </Step>
+  <Step title="Create a BitSet">
+    ```javascript
+    const BitSet = require('bit-set-js');
+    const bits = new BitSet(32);
+    ```
+  </Step>
+  <Step title="Manipulate bits">
+    ```javascript
+    bits.set(5);
+    bits.toggle(10);
+    console.log(bits.get(5));   // true
+    ```
+  </Step>
+  <Step title="Serialize and transfer">
+    ```javascript
+    const binary = bits.stringify();   // "00000000000000000000010000100000"
+    const ints   = bits.getData();     // [1056]
+    ```
+  </Step>
+</Steps>

@@ -1,0 +1,192 @@
+---
+title: "Bit Operations: get, set, clear, toggle, invert"
+sidebarTitle: "Bit Operations"
+description: "Read and modify individual bits in a BitSet using get, set, clear, toggle, and invert. All index-based methods return null or false for out-of-bounds access."
+---
+
+BitSet provides five methods for reading and modifying bits: `get` to read a single bit, `set` and `clear` to write a known value, `toggle` to flip a bit without knowing its current state, and `invert` to flip every bit in the array at once. All methods that accept an index return a sentinel value — `null` or `false` — when the index falls outside the array's bounds, so you can detect range errors without catching exceptions.
+
+---
+
+## `get(n)`
+
+```javascript
+bitset.get(n)
+```
+
+Returns the value of the bit at index `n` as a `boolean`. If `n` is outside the range `[0, length - 1]`, returns `null` instead.
+
+<ParamField path="n" type="number" required>
+  The zero-based index of the bit to read. Index `0` is the least-significant (rightmost) bit.
+</ParamField>
+
+**Returns:** `true` if the bit is `1`, `false` if the bit is `0`, or `null` if `n` is out of bounds.
+
+```javascript
+const bs = new BitSet("0101");
+// bit 0 = 1 (rightmost char), bit 1 = 0, bit 2 = 1, bit 3 = 0
+
+bs.get(0); // true
+bs.get(1); // false
+bs.get(2); // true
+bs.get(3); // false
+
+// Out of bounds
+bs.get(4); // null
+bs.get(9); // null
+```
+
+<Note>
+  Because `get` returns `null` (not `false`) for out-of-bounds indices, you can distinguish a missing bit from a bit that is explicitly set to `0`. Use a strict equality check (`=== null`) when you need to detect range violations.
+</Note>
+
+---
+
+## `set(n)`
+
+```javascript
+bitset.set(n)
+```
+
+Sets the bit at index `n` to `1`. If `n` is out of bounds, the call is silently ignored.
+
+<ParamField path="n" type="number" required>
+  The zero-based index of the bit to set to `1`.
+</ParamField>
+
+**Returns:** `true` if the index was valid and the operation succeeded; `false` if the index was out of bounds.
+
+```javascript
+const bs = new BitSet(8); // 8 bits, all zeros
+bs.stringify(); // "00000000"
+
+bs.set(0); // true — bit 0 is now 1
+bs.set(3); // true — bit 3 is now 1
+bs.stringify(); // "00001001"
+
+// Out of bounds — returns false, BitSet is unchanged
+bs.set(8);  // false
+bs.set(99); // false
+```
+
+<Tip>
+  You can use the `boolean` return value as a guard in loops or conditional logic — a `false` result means you have exceeded the array's capacity.
+</Tip>
+
+---
+
+## `clear(n)`
+
+```javascript
+bitset.clear(n)
+```
+
+Sets the bit at index `n` to `0`. If `n` is out of bounds, the call is silently ignored.
+
+<ParamField path="n" type="number" required>
+  The zero-based index of the bit to set to `0`.
+</ParamField>
+
+**Returns:** `true` if the index was valid and the operation succeeded; `false` if the index was out of bounds.
+
+```javascript
+const bs = new BitSet(8, 1); // 8 bits, all ones
+bs.stringify(); // "11111111"
+
+bs.clear(0); // true — bit 0 is now 0
+bs.clear(4); // true — bit 4 is now 0
+bs.stringify(); // "11101110"
+
+// Out of bounds — returns false, BitSet is unchanged
+bs.clear(8); // false
+```
+
+---
+
+## `toggle(n)`
+
+```javascript
+bitset.toggle(n)
+```
+
+Flips the bit at index `n` — if it is currently `1` it becomes `0`, and if it is `0` it becomes `1`. If `n` is out of bounds, the call is silently ignored.
+
+<ParamField path="n" type="number" required>
+  The zero-based index of the bit to flip.
+</ParamField>
+
+**Returns:** `true` if the index was valid and the operation succeeded; `false` if the index was out of bounds.
+
+```javascript
+const bs = new BitSet(4); // 4 bits, all zeros
+bs.stringify(); // "0000"
+
+bs.toggle(1); // true — bit 1 flips 0 → 1
+bs.stringify(); // "0010"
+
+bs.toggle(1); // true — bit 1 flips 1 → 0
+bs.stringify(); // "0000"
+
+bs.toggle(0); // true
+bs.toggle(3); // true
+bs.stringify(); // "1001"
+
+// Out of bounds
+bs.toggle(4); // false
+```
+
+<Note>
+  `toggle` is more efficient than a `get` + conditional `set`/`clear` pattern when you simply need to flip a bit regardless of its current value.
+</Note>
+
+---
+
+## `invert()`
+
+```javascript
+bitset.invert()
+```
+
+Flips every bit in the array simultaneously — all `1`s become `0`s and all `0`s become `1`s. Unlike the single-bit methods, `invert` operates on the raw backing integers directly, making it efficient even for large arrays.
+
+`invert` mutates the `BitSet` in place **and returns `this`**, which means you can chain it with other method calls.
+
+**Returns:** The same `BitSet` instance (mutated).
+
+```javascript
+const bs = new BitSet("0101");
+bs.stringify(); // "0101"
+
+bs.invert();
+bs.stringify(); // "1010"
+
+bs.invert();
+bs.stringify(); // "0101"  — back to original
+```
+
+**Method chaining with `invert`:**
+
+```javascript
+const bs = new BitSet("0101");
+
+// Invert, then immediately read the count of set bits
+const countAfterInvert = bs.invert().count();
+// countAfterInvert === 2  (bits 1 and 3 are now set)
+bs.stringify(); // "1010"
+```
+
+<Warning>
+  `invert` mutates the `BitSet` instance. If you need to preserve the original state, create a copy first by calling `getData()` and constructing a new `BitSet` from the returned array before inverting.
+</Warning>
+
+---
+
+## Return Values Summary
+
+| Method | In-bounds return | Out-of-bounds return |
+|---|---|---|
+| `get(n)` | `true` or `false` (the bit's value) | `null` |
+| `set(n)` | `true` | `false` |
+| `clear(n)` | `true` | `false` |
+| `toggle(n)` | `true` | `false` |
+| `invert()` | The `BitSet` instance (`this`) | *(operates on whole array, no index)* |

@@ -1,0 +1,137 @@
+---
+title: "BitSetJS Basics: Bit Arrays, Indexing, and Core API"
+sidebarTitle: "BitSet Basics"
+description: "Understand what a BitSet is, how bit arrays differ from boolean arrays, and how BitSetJS models bits as indexed positions in a sequence."
+---
+
+A **BitSet** (also called a bit array or bit vector) is a compact data structure that stores a sequence of binary flags — each one either `0` or `1`. Instead of dedicating a full byte (or more) to each flag the way a JavaScript boolean array does, a BitSet packs many flags into a single integer. BitSetJS brings this technique to JavaScript, letting you represent hundreds or thousands of binary flags while using a fraction of the memory you would otherwise need.
+
+## Bits as indexed positions
+
+Every bit in a BitSet has a numeric index starting at `0`. When you construct a BitSet from a binary string, the **rightmost character maps to bit 0**, and the index increases as you move left through the string. This mirrors the way binary numbers are written in positional notation.
+
+```javascript
+const bs = new BitSet("0101");
+//  string:  "0  1  0  1"
+//  index:    3  2  1  0   ← bit 0 is the rightmost character
+
+bs.get(0); // true  — rightmost character is '1'
+bs.get(1); // false — next character is '0'
+bs.get(2); // true  — next character is '1'
+bs.get(3); // false — leftmost character is '0'
+
+bs.stringify(); // "0101" — same order as the original string
+```
+
+<Note>
+`stringify()` reconstructs the string in the same left-to-right visual order you provided. The internal index ordering (right = 0) only matters when you call `get()`, `set()`, `clear()`, or `toggle()` by index.
+</Note>
+
+## BitSet vs. boolean array
+
+JavaScript arrays are flexible, but that flexibility comes at a memory cost. A `boolean` stored in a plain array is treated as a full object reference or, at best, an 8-bit byte in a typed array — far more than the single bit of information it actually carries. A BitSet eliminates that overhead by packing 32 boolean values into one 32-bit integer.
+
+<CodeGroup>
+
+```javascript Boolean array (high memory)
+// 1024 separate boolean values
+const flags = new Array(1024).fill(false);
+
+// Each entry occupies roughly 8 bytes in a typical JS engine.
+// Total: ~8 192 bytes (8 KB) for 1 024 flags.
+
+flags[3] = true;
+console.log(flags[3]); // true
+```
+
+```javascript BitSet (memory-efficient)
+// 1024 bits packed into 32 integers (32 × 32 = 1 024 bits)
+const bs = new BitSet(1024);
+
+// Total: 32 integers × 4 bytes each = 128 bytes for 1 024 flags.
+// That's 64× more compact than the boolean array above.
+
+bs.set(3);
+console.log(bs.get(3)); // true
+```
+
+</CodeGroup>
+
+<Tip>
+For small flag counts (fewer than ~64), the difference is negligible. BitSet shines when you're working with hundreds or thousands of flags, or when you need to serialize and transfer the flags efficiently over a network.
+</Tip>
+
+The table below summarises the key trade-offs:
+
+| | Boolean array | BitSet |
+|---|---|---|
+| Memory per flag | ~8 bytes | 1 bit |
+| Random access | `O(1)` | `O(1)` |
+| String serialization | `JSON.stringify` | `stringify()` |
+| Raw integer export | ✗ | `getData()` |
+
+## Zero-based indexing
+
+Bits are indexed from `0`, where `0` is the **least significant bit** — the bit that represents `2⁰` (the value `1`) in binary. This is consistent with how every positional binary notation works.
+
+```
+Bit positions in a BitSet of length 8:
+
+  index:  7  6  5  4  3  2  1  0
+          ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓
+  value:  0  0  0  1  0  1  0  1   ← bits 0, 2, and 4 are set
+```
+
+You can construct this exact BitSet and verify each position:
+
+```javascript
+const bs = new BitSet(8);
+bs.set(0);
+bs.set(2);
+bs.set(4);
+
+bs.get(0); // true
+bs.get(1); // false
+bs.get(2); // true
+bs.get(3); // false
+bs.get(4); // true
+
+bs.stringify(); // "00010101"
+//  positions:     76543210  (read right-to-left for index order)
+```
+
+<Note>
+`stringify()` prints the bits in **descending** index order (left = highest index, right = lowest). The rightmost character of `stringify()` output always corresponds to bit `0`.
+</Note>
+
+## Out-of-bounds access
+
+BitSetJS has a fixed length set at construction time. Attempting to read a bit at or beyond that length does not throw an error — instead, `get()` returns `null`. This is intentional: `null` is a distinct signal that the requested index is outside the bounds of the array, separate from the valid values `true` and `false`.
+
+```javascript
+const bs = new BitSet("0101"); // length is 4; valid indices are 0–3
+
+bs.get(0); // true  — within bounds
+bs.get(3); // false — within bounds
+bs.get(4); // null  — out of bounds (index equals length)
+bs.get(99); // null  — out of bounds
+
+// The same boundary applies to write operations:
+bs.set(4);    // returns false, does nothing
+bs.clear(10); // returns false, does nothing
+bs.toggle(4); // returns false, does nothing
+```
+
+<Warning>
+Always check the return value of `get()` if your index may exceed the BitSet's length. A value of `null` means the index is out of range — it does not mean the bit is `0` or unset.
+</Warning>
+
+You can inspect the length of any BitSet through the `length` property:
+
+```javascript
+const bs = new BitSet(64);
+console.log(bs.length); // 64
+
+const bs2 = new BitSet("1101");
+console.log(bs2.length); // 4
+```

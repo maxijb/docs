@@ -1,0 +1,99 @@
+---
+title: "Install BitSetJS: npm, Yarn, pnpm, and Browser Script Tag"
+sidebarTitle: "Installation"
+description: "Learn how to install bit-set-js via npm, yarn, or pnpm, and how to load it in the browser with a script tag or direct file include."
+---
+
+Getting BitSetJS into your project takes less than a minute. The package is published to the npm registry under the name `bit-set-js` and works in every modern Node.js version as well as in the browser. You can install it through your preferred package manager, require it as a CommonJS module, import it as ES6, or load it directly with a `<script>` tag — whichever fits your existing setup.
+
+<ResponseField name="maxi test response" type="string">
+  Enter a descriptionfvkfvkvfkmkmfv
+</ResponseField>
+
+MAXI
+
+## Install from npm
+
+<Steps>
+  <Step title="Add the package">
+    Run one of the following commands in your project root, depending on the package manager you use:
+
+    <CodeGroup>
+      ```bash npm
+      npm install bit-set-js
+      ```
+
+      ```bash yarn
+      yarn add bit-set-js
+      ```
+
+      ```bash pnpm
+      pnpm add bit-set-js
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Import or require the module">
+    After installation, load BitSetJS in your JavaScript file using CommonJS `require` or an ES6 `import`.
+
+    **CommonJS (Node.js)**
+
+    ```javascript
+    const BitSet = require('bit-set-js');
+
+    const flags = new BitSet(16);
+    flags.set(0);
+    console.log(flags.stringify()); // "0000000000000001"
+    ```
+
+    **ES6 import**
+
+    The main entry point (`lib/BitSet.js`) is written in ES6. If you use a bundler such as webpack, Rollup, or Vite, you can import it with ES6 `import` syntax via CommonJS interop:
+
+    ```javascript
+    import BitSet from 'bit-set-js';
+
+    const flags = new BitSet(16);
+    flags.set(0);
+    console.log(flags.stringify()); // "0000000000000001"
+    ```
+
+    <Note>
+      The package's `main` field points to `lib/BitSet.js`, which uses ES6 syntax (`let`, `const`, arrow functions, template literals) and exports via CommonJS (`module.exports`). The `import` syntax works through bundlers such as webpack, Rollup, or Vite via CommonJS interop. If you need to target older environments without a transpiler or bundler, use the pre-compiled ES5 build described below.
+    </Note>
+  </Step>
+</Steps>
+
+## Use in the browser
+
+You can load BitSetJS in the browser without a bundler by referencing the library file in a `<script>` tag. BitSetJS automatically detects the browser environment and attaches itself to `window.BitSet`.
+
+**ES6 build** — use this with modern browsers (Chrome 51+, Firefox 54+, Safari 10+):
+
+```html
+<script src="node_modules/bit-set-js/lib/BitSet.js"></script>
+<script>
+  const flags = new BitSet(8);
+  flags.set(2);
+  console.log(flags.stringify()); // "00000100"
+</script>
+```
+
+**ES5 build** — use this when you need to support older browsers without a transpilation step:
+
+```html
+<script src="node_modules/bit-set-js/lib/BitSetES5.js"></script>
+<script>
+  var flags = new BitSet(8);
+  flags.set(2);
+  console.log(flags.stringify()); // "00000100"
+</script>
+```
+
+<Note>
+  A pre-compiled ES5 build is available at `lib/BitSetES5.js` inside the package. It was produced by Babel and is safe to use in environments that do not support modern JavaScript syntax. No additional tooling is required.
+</Note>
+
+<Tip>
+  If you are already using a bundler such as webpack, Rollup, or Vite, you do not need to worry about the ES5 build. Your bundler will handle transpilation automatically based on your project's target configuration.
+</Tip>

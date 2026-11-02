@@ -1,0 +1,54 @@
+---
+title: "BitSetJS: Memory-Efficient Bit Arrays for JavaScript"
+sidebarTitle: "Introduction"
+description: "BitSetJS is a JavaScript library for compact bit array storage. Pack thousands of boolean flags into 32-bit integers for minimal memory use."
+---
+
+/
+
+BitSetJS is a lightweight JavaScript library that lets you store large collections of boolean flags in a fraction of the memory a plain array would require. Instead of allocating a full JavaScript value for every true/false flag, BitSetJS packs bits into 32-bit integers under the hood — so a 32-flag array occupies a single integer rather than 32 separate values. Whether you're managing user permissions, tracking feature flags, or building a dense boolean grid, BitSetJS gives you a clean API on top of a highly compact data structure.
+
+/
+
+## Feature overview
+
+<CardGroup cols={2}>
+  <Card title="Constructor options" icon="hammer" href="/api/constructor">
+    Create a BitSet from a size integer, a binary string like `"1010"`, or a raw array of 32-bit integers. All three paths give you the same full-featured instance.
+  </Card>
+  <Card title="Bit operations" icon="toggle-on" href="/api/bit-operations">
+    Set, clear, get, and toggle individual bits by index. Invert the entire set in one call. Every mutating method returns a value so you can check success inline.
+  </Card>
+  <Card title="Serialization" icon="arrow-right-arrow-left" href="/api/serialization">
+    Round-trip your BitSet to and from a binary string (`"00101001"`) or a plain integer array. Transfer the raw integer array over a network connection to minimize payload size.
+  </Card>
+  <Card title="Browser & Node.js" icon="globe" href="/guides/browser-usage">
+    Load BitSetJS as a CommonJS module in Node.js, import the ES6 source directly, or drop the ES5 build into a `<script>` tag with zero configuration.
+  </Card>
+</CardGroup>
+
+## When to use BitSetJS
+
+BitSetJS is a strong fit whenever you need to store or manipulate a large number of boolean values and memory efficiency matters. Here are a few practical scenarios where it shines:
+
+**Permission bitmasks.** Represent a user's role or capability set as a single BitSet. Each bit position corresponds to one permission — read, write, delete, admin, and so on. Checking and updating permissions becomes a single bitwise operation, and you can serialize the entire permission set as a short integer array for storage.
+
+**Feature flags.** Maintain a compact record of which features are enabled for a given user or session. With BitSetJS, toggling a feature flag is a one-liner, and comparing two flag sets (for example, checking whether a new configuration is a superset of the old one) is straightforward.
+
+**Dense boolean collections.** Any time you would otherwise reach for an array of `true`/`false` values — visited nodes in a graph traversal, checked items in a large list, pixel masks in a simple canvas effect — BitSetJS reduces memory consumption by roughly 32×.
+
+<Note>
+  BitSetJS stores bits in index order: bit `0` is the rightmost character in the string returned by `stringify()`. Keep this in mind when you initialise a BitSet from a binary string or interpret its serialized output.
+</Note>
+
+## How it works
+
+Internally, BitSetJS backs every BitSet with an array of plain JavaScript integers. Each integer holds exactly 32 bits, so a BitSet of length 64 is stored as an array of two integers, a BitSet of length 128 as an array of four integers, and so on.
+
+When you call `set(n)`, the library calculates which integer in the backing array owns bit `n` (by dividing `n` by 32) and which bit position within that integer to flip (by taking `n mod 32`). It then applies a standard bitwise OR with a shifted `1` to set the bit. `clear(n)` and `toggle(n)` follow the same addressing logic, using AND-NOT and XOR respectively.
+
+You can inspect the raw backing array at any time with `getData()`, which is especially useful when you want to transmit a BitSet over a network — send the integer array instead of the full binary string to keep payloads small.
+
+<Tip>
+  Use `getData()` to serialise a BitSet for network transfer and reconstruct it on the other end with `new BitSet(intArray)`. This round-trip preserves the exact bit state with minimal overhead.
+</Tip>

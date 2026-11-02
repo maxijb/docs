@@ -1,0 +1,125 @@
+---
+title: "Utility Methods: count, toString, length"
+sidebarTitle: "Utilities"
+description: "Use count() to tally set bits, toString() to identify a BitSet object, and the length property to check the total number of bits in the array."
+---
+
+BitSet includes a small set of utility methods that help you inspect an instance's overall state, verify its type, and understand its capacity. `count()` answers "how many bits are currently set?", `toString()` answers "is this object a BitSet?", and the `length` property answers "how large is this array?". Together they give you the high-level view of a `BitSet` without having to iterate over individual bits manually.
+
+---
+
+## `count()`
+
+```javascript
+bitset.count()
+```
+
+Returns the total number of bits currently set to `1` in the `BitSet`. It scans every bit position from `0` to `length - 1` and counts the ones.
+
+**Returns:** `number` — the count of bits set to `1`.
+
+```javascript
+const bs = new BitSet("1010");
+bs.count(); // 2  — bits 1 and 3 are set
+
+const allZeros = new BitSet(8);
+allZeros.count(); // 0
+
+const allOnes = new BitSet(8, 1);
+allOnes.count(); // 8
+
+const bs2 = new BitSet("00000011");
+bs2.count(); // 2
+```
+
+<Note>
+  `count()` reflects the current state of the `BitSet`, including any mutations made by `set`, `clear`, `toggle`, or `invert`. Call it after any series of operations to get an up-to-date tally.
+</Note>
+
+---
+
+## `toString()`
+
+```javascript
+bitset.toString()
+```
+
+Returns the string `"[object BitSet]"`. This fixed return value overrides JavaScript's default `Object.prototype.toString` behavior and lets you identify any `BitSet` instance at runtime, regardless of how it was constructed.
+
+**Returns:** `string` — always `"[object BitSet]"`.
+
+```javascript
+const bs = new BitSet(32);
+bs.toString(); // "[object BitSet]"
+
+// Type-checking idiom
+function isBitSet(value) {
+  return value !== null &&
+         typeof value === "object" &&
+         value.toString() === "[object BitSet]";
+}
+
+isBitSet(new BitSet(8)); // true
+isBitSet([]);            // false
+isBitSet("hello");       // false
+```
+
+<Tip>
+  `toString()` is automatically called when you coerce a `BitSet` to a string, for example with string concatenation or template literals. If you want the binary representation of the bits rather than the type tag, use [`stringify()`](/api/serialization) instead.
+</Tip>
+
+---
+
+## `length` Property
+
+```javascript
+bitset.length
+```
+
+A numeric property set at construction time that holds the total number of bits in the array. It does not change after the `BitSet` is created.
+
+```javascript
+new BitSet().length;        // 32  — default size
+new BitSet(32).length;      // 32
+new BitSet(96).length;      // 96
+new BitSet("0101").length;  // 4   — matches the string's character count
+new BitSet([5, 3]).length;  // 64  — two 32-bit integers
+```
+
+<Note>
+  `length` is the total *capacity* of the array, not the number of bits currently set to `1`. To count set bits, use `count()`. To verify the type and size of a `BitSet` at a boundary (for example, before combining two arrays), check `length` alongside `toString()`.
+</Note>
+
+---
+
+## Practical Example: Counting Zeros with `count()` and `invert()`
+
+Because `invert()` returns `this`, you can combine it with `count()` to derive the number of *unset* bits without any extra variables.
+
+```javascript
+const bs = new BitSet("00000011"); // 8 bits, 2 ones and 6 zeros
+bs.length;  // 8
+bs.count(); // 2  — two bits are set
+
+// How many zeros are there?
+const zeroCount = bs.length - bs.count(); // 6
+
+// Alternatively: invert the set, count the ones, then invert back
+bs.invert();
+bs.count(); // 6  — the former zeros are now ones
+bs.invert(); // restore original state
+bs.count(); // 2  — back to the original two ones
+```
+
+You can also chain the invert and count in a single expression when you do not need to preserve state:
+
+```javascript
+const bs = new BitSet("00000011");
+
+// Count zeros directly (destructive — bs is now inverted)
+const zeros = bs.invert().count(); // 6
+```
+
+<Warning>
+  The chained version above mutates `bs`. If you need `bs` to remain unchanged after counting its zeros, calculate `bs.length - bs.count()` instead.
+</Warning>

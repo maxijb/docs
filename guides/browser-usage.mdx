@@ -1,0 +1,95 @@
+---
+title: "Using BitSetJS in the Browser Without a Build Tool"
+sidebarTitle: "Browser Usage"
+description: "Load BitSetJS directly in a browser page via a script tag. The library auto-exports to window.BitSet when it detects a non-CommonJS environment."
+---
+
+BitSetJS works natively in the browser without any build tools. When the library loads and detects that `module` is not defined in the current environment, it automatically assigns itself to `window.BitSet`, making the constructor globally available to every script on your page. You can drop it into any HTML file with a single `<script>` tag.
+
+## Loading via script tag
+
+The safest choice for browser use without a bundler is `lib/BitSetES5.js`. This is the Babel-compiled ES5 build, which runs in a wider range of browsers than the default ES6 build.
+
+```html
+<script src="node_modules/bit-set-js/lib/BitSetES5.js"></script>
+```
+
+After this tag executes, `window.BitSet` (and simply `BitSet` in any subsequent script) is available for use:
+
+```javascript
+const flags = new BitSet(8);   // 8-bit set, all zeroes
+flags.set(0);                  // set bit 0
+flags.set(3);                  // set bit 3
+console.log(flags.stringify()); // "00001001"
+```
+
+If you are hosting the file from a CDN or a different path, replace the `src` value with the appropriate URL.
+
+## Using with a bundler
+
+If your project uses webpack, Rollup, Parcel, or Vite, you do not need to reference the file path directly. Install the package with your package manager and import it normally:
+
+```javascript
+// CommonJS (webpack, older Node.js toolchains)
+const BitSet = require('bit-set-js');
+
+// ES module syntax (Rollup, Vite, or webpack with ESM)
+import BitSet from 'bit-set-js';
+```
+
+Your bundler resolves `bit-set-js` to `lib/BitSet.js` via the `main` field in `package.json` and handles the environment detection automatically.
+
+## Complete browser example
+
+The following is a fully self-contained HTML page. It loads the ES5 build from the local `node_modules` folder, creates a small BitSet to track which notification types a user has enabled, and logs the result to the browser console.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BitSetJS Browser Demo</title>
+  <!-- Load the ES5 build — no bundler required -->
+  <script src="node_modules/bit-set-js/lib/BitSetES5.js"></script>
+</head>
+<body>
+  <h1>BitSetJS Browser Demo</h1>
+
+  <script>
+    // Bit positions represent notification types:
+    //   0 = email, 1 = push, 2 = sms, 3 = in-app
+    const NOTIFICATION_SIZE = 8;
+    const EMAIL = 0, PUSH = 1, SMS = 2, IN_APP = 3;
+
+    const prefs = new BitSet(NOTIFICATION_SIZE);
+
+    // User enabled email and in-app notifications
+    prefs.set(EMAIL);
+    prefs.set(IN_APP);
+
+    console.log('Email enabled:', prefs.get(EMAIL));   // true
+    console.log('Push enabled:',  prefs.get(PUSH));    // false
+    console.log('SMS enabled:',   prefs.get(SMS));     // false
+    console.log('In-app enabled:', prefs.get(IN_APP)); // true
+
+    // Binary snapshot — rightmost digit is bit 0
+    console.log('Preference flags:', prefs.stringify()); // "00001001"
+
+    // Toggle SMS on, then toggle it off again
+    prefs.toggle(SMS);
+    console.log('After toggling SMS on:', prefs.stringify());  // "00001101"
+    prefs.toggle(SMS);
+    console.log('After toggling SMS off:', prefs.stringify()); // "00001001"
+
+    // Count how many notification types are active
+    console.log('Active notification types:', prefs.count()); // 2
+  </script>
+</body>
+</html>
+```
+
+Open this file in any browser and check the developer console to see the output.
+
+<Note>
+  **ES5 vs ES6 build:** `lib/BitSetES5.js` uses only ES5 syntax, making it safe for IE11 and other legacy browsers. `lib/BitSet.js` (the ES6 build) requires a modern JavaScript environment and is the default when you `require('bit-set-js')` in Node.js or a modern bundler. Choose `BitSetES5.js` when you cannot guarantee ES6 support in your target environment; choose `BitSet.js` (or simply rely on the package's `main` entry point) when you know your environment is modern.
+</Note>

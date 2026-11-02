@@ -1,0 +1,156 @@
+---
+title: "Serialization Methods: stringify, toArray, getData"
+sidebarTitle: "Serialization"
+description: "Convert a BitSet to a binary string, a JavaScript array of 0s and 1s, or a raw integer array. Use getData to transfer bit state over a network or persist it."
+---
+
+BitSet provides three methods for reading the entire state of a bit array at once. `stringify()` gives you a human-readable binary string, `toArray()` gives you a JavaScript array of `0`s and `1`s where each index directly corresponds to a bit position, and `getData()` exposes the compact raw integer array that backs the `BitSet` internally. Choosing the right method depends on whether you need readability, positional access, or compact serialization.
+
+---
+
+## `stringify()`
+
+```javascript
+bitset.stringify()
+```
+
+Returns the full contents of the `BitSet` as a binary string. The **leftmost character** represents the highest-index bit (`length - 1`), and the **rightmost character** represents bit `0`. This matches the conventional way humans write binary numbers.
+
+**Returns:** `string` — a string of `'0'` and `'1'` characters with length equal to `bitset.length`.
+
+```javascript
+// A 3-bit BitSet created from the string "101"
+const bs = new BitSet("101");
+bs.stringify(); // "101"
+// leftmost '1' = bit 2, middle '0' = bit 1, rightmost '1' = bit 0
+
+// A default 32-bit BitSet (all zeros) produces 32 characters
+const bs2 = new BitSet();
+bs2.stringify().length; // 32
+bs2.stringify(); // "00000000000000000000000000000000"
+
+// After setting individual bits
+const bs3 = new BitSet(8);
+bs3.set(0);
+bs3.set(3);
+bs3.stringify(); // "00001001"
+// bit 3 = '1' at position 4 from right, bit 0 = '1' at rightmost position
+```
+
+<Note>
+  `stringify()` is implemented as `toArray().reverse().join("")`. The `toArray()` method returns elements in ascending bit-index order (index 0 first), so reversing it places the highest-index bit on the left — matching standard binary notation.
+</Note>
+
+<Tip>
+  The output of `stringify()` can be fed directly back into the `BitSet` constructor to create an identical copy: `new BitSet(bs.stringify())`.
+</Tip>
+
+---
+
+## `toArray()`
+
+```javascript
+bitset.toArray()
+```
+
+Returns the bit array as a plain JavaScript array of integers (`0` or `1`), where the **array index corresponds directly to the bit index**. Element `0` in the returned array is bit `0` of the `BitSet`, element `1` is bit `1`, and so on.
+
+**Returns:** `number[]` — an array of `0`s and `1`s with `length` equal to `bitset.length`.
+
+```javascript
+// "101": bit 0 = 1, bit 1 = 0, bit 2 = 1
+const bs = new BitSet("101");
+bs.toArray(); // [1, 0, 1]
+// index:        0  1  2
+
+// "0101": bit 0=1, bit 1=0, bit 2=1, bit 3=0
+const bs2 = new BitSet("0101");
+bs2.toArray(); // [1, 0, 1, 0]
+
+// Default 32-bit BitSet: toArray returns 32 elements
+const bs3 = new BitSet();
+bs3.set(0);
+bs3.set(2);
+bs3.toArray()[0]; // 1  (bit 0 is set)
+bs3.toArray()[1]; // 0  (bit 1 is clear)
+bs3.toArray()[2]; // 1  (bit 2 is set)
+bs3.toArray().length; // 32
+```
+
+<Note>
+  The index-to-bit correspondence in `toArray()` is the **opposite** of the character order in `stringify()`. In `toArray()`, position `0` holds the lowest bit; in `stringify()`, the rightmost character holds the lowest bit. Use `toArray()` when you need to work with bits by numeric index in JavaScript code.
+</Note>
+
+---
+
+## `getData()`
+
+```javascript
+bitset.getData()
+```
+
+Returns the raw backing array of 32-bit integers that stores all the bits. BitSet packs bits tightly — every 32 bits occupy exactly one integer. This makes `getData()` ideal for compact serialization: send the returned array over a network or write it to storage, then reconstruct the `BitSet` by passing the same array to `new BitSet(intArray)`.
+
+**Returns:** `number[]` — the internal array of 32-bit integers. Each integer holds 32 bits. The array length equals `Math.ceil(bitset.length / 32)`.
+
+```javascript
+// "101" = binary 5
+const bs = new BitSet("101");
+bs.getData(); // [5]
+// 5 in binary = 101 → bit 0 = 1, bit 1 = 0, bit 2 = 1
+
+// A 32-bit BitSet uses exactly one integer
+const bs2 = new BitSet(32);
+bs2.set(0);
+bs2.set(1);
+bs2.getData(); // [3]   (3 = 0b11)
+
+// A 64-bit BitSet uses two integers
+const bs3 = new BitSet(64);
+bs3.set(0);   // bit 0 of first integer
+bs3.set(32);  // bit 0 of second integer
+bs3.getData(); // [1, 1]
+
+// getData() is used for network/storage serialization
+const payload = JSON.stringify(bs.getData()); // "[5]"
+```
+
+<Warning>
+  `getData()` returns a reference to the internal array, not a copy. Modifying the returned array directly will corrupt the `BitSet`'s state. If you need a safe snapshot, copy the array first: `[...bitset.getData()]`.
+</Warning>
+
+---
+
+## Roundtripping with `getData()` and the Constructor
+
+The most reliable way to serialize and restore a `BitSet` is to extract the raw integer array with `getData()`, store or transmit it, and then pass it back to the `BitSet` constructor.
+
+```javascript
+// 1. Create and populate a BitSet
+const original = new BitSet(64);
+original.set(0);
+original.set(15);
+original.set(33);
+original.set(62);
+
+// 2. Serialize: extract the backing integers
+const rawData = original.getData(); // [32769, 1073741826]
+const serialized = JSON.stringify(rawData);
+
+// -- send over a network, write to a database, etc. --
+
+// 3. Deserialize: restore from the raw integers
+const parsed = JSON.parse(serialized);
+const restored = new BitSet(parsed);
+
+// 4. Verify the restored BitSet matches the original
+restored.get(0);  // true
+restored.get(15); // true
+restored.get(33); // true
+restored.get(62); // true
+restored.length;  // 64
+```
+
+<Note>
+  When you reconstruct a `BitSet` from a raw integer array, the `length` is always set to `32 × intArray.length`. If your original `BitSet` had a length that was not a multiple of 32 (for example, 5 or 7 bits), the restored `BitSet` will have a `length` rounded up to the next multiple of 32. The extra bits will be `0` or reflect the underlying integer's value, so consider whether this matters for your use case.
+</Note>

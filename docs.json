@@ -1,0 +1,58 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "BitSetJS",
+  "theme": "luma",
+  "colors": {
+    "primary": "#2563EB",
+    "light": "#DBEAFE",
+    "dark": "#1E3A8A"
+  },
+  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/maxijb/BitSetJS"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "pages": [
+          "introduction",
+          "installation",
+          "quickstart"
+        ]
+      },
+      {
+        "tab": "Core Concepts",
+        "pages": [
+          "concepts/bitset-basics",
+          "guides/memory-model"
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "pages": [
+          "api/constructor",
+          "api/bit-operations",
+          "api/serialization"
+        ]
+      },
+      {
+        "tab": "Guides",
+        "pages": [
+          "guides/browser-usage",
+          "guides/commonjs-usage",
+          "guides/es5-compatibility"
+        ]
+      },
+      {
+        "tab": "Tab 2",
+        "pages": [
+          "api/utilities"
+        ]
+      }
+    ]
+  }
+}

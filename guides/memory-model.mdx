@@ -1,0 +1,183 @@
+---
+title: "How BitSetJS Stores Bits: 32-Bit Integer Memory Model"
+sidebarTitle: "Memory Model"
+description: "BitSetJS packs bits into 32-bit integers internally. Learn how the backing array is structured, how to access raw data, and what this means for efficiency."
+---
+
+BitSetJS stores bits in a private array of plain JavaScript integers, where each integer holds exactly **32 bits**. When you create a BitSet, the library calculates how many 32-bit integers are needed to cover the requested length — `Math.ceil(length / 32)` — and allocates that many slots. All bit read and write operations translate your index into an `(integer_slot, bit_within_that_slot)` pair using integer division and modulo arithmetic. This design keeps the data structure lightweight and makes bulk operations (like `invert()`) fast, because they can operate on one integer at a time rather than looping over individual bits.
+
+## The backing integer array
+
+The number of integers in the backing array depends directly on the BitSet's length:
+
+| BitSet length | Integers allocated | Calculation |
+|---|---|---|
+| 1 – 32 bits | 1 | `Math.ceil(32 / 32) = 1` |
+| 33 – 64 bits | 2 | `Math.ceil(64 / 32) = 2` |
+| 65 – 96 bits | 3 | `Math.ceil(96 / 32) = 3` |
+| 1 024 bits | 32 | `Math.ceil(1024 / 32) = 32` |
+
+A 64-bit BitSet uses exactly 2 integers. Setting bit `0` writes into the first integer; setting bit `32` writes into the second:
+
+```javascript
+const bs = new BitSet(64);
+
+bs.set(0);  // bit 0 lives in integer slot 0 (value becomes 1)
+bs.set(32); // bit 32 lives in integer slot 1 (value becomes 1)
+
+bs.getData(); // [1, 1]
+//              ^  ^ second integer (bits 32–63)
+//              | first integer (bits 0–31)
+```
+
+A 96-bit BitSet uses 3 integers — slots `0`, `1`, and `2` — covering bits `0–31`, `32–63`, and `64–95` respectively:
+
+```javascript
+const bs = new BitSet(96);
+bs.set(0);  // slot 0
+bs.set(33); // slot 1
+bs.set(64); // slot 2
+
+bs.getData(); // [1, 2, 1]
+```
+
+<Note>
+Bit indices within each 32-bit integer count from the **least significant bit** (bit 0 within the slot). So setting bit `32` sets the least significant bit of the second integer (slot 1), giving it the value `1`.
+</Note>
+
+## Memory efficiency
+
+Packing bits into integers produces dramatic memory savings for large flag sets. Consider storing 1 024 boolean flags:
+
+```javascript
+// ─── Option A: plain JavaScript array ─────────────────────────────────────
+const boolArray = new Array(1024).fill(false);
+// Each boolean occupies ~8 bytes in a typical V8 heap allocation.
+// Estimated cost: 1 024 × 8 bytes = ~8 192 bytes (~8 KB)
+
+// ─── Option B: BitSet ─────────────────────────────────────────────────────
+const bs = new BitSet(1024);
+// Math.ceil(1024 / 32) = 32 integers, each 4 bytes.
+// Estimated cost: 32 × 4 bytes = 128 bytes
+//
+// That is 64× smaller than the plain boolean array.
+
+bs.getData().length; // 32  ← only 32 integers backing 1 024 flags
+```
+
+<Note>
+Actual V8 heap usage depends on object overhead, GC state, and array representation. The comparison above reflects the raw data storage cost. Even accounting for object overhead, a BitSet is substantially more compact at scale.
+</Note>
+
+The efficiency scales linearly: a 32 768-bit BitSet requires only 1 024 integers (4 KB of raw data) where a boolean array would need roughly 256 KB.
+
+## Accessing raw data with getData()
+
+`getData()` returns a direct reference to the backing integer array. Each element is a standard JavaScript number representing a 32-bit signed integer. The bit at index `n` is encoded in integer slot `Math.floor(n / 32)`, at bit position `n % 32` within that integer.
+
+The simplest example is a single-slot BitSet built from a binary string:
+
+```javascript
+// "101" in binary is 5 in decimal (1×4 + 0×2 + 1×1)
+const bs = new BitSet("101");
+
+bs.getData(); // [5]
+//             ^ 5 = 0b00000000000000000000000000000101
+
+bs.get(0); // true  — bit 0 of 5 is 1
+bs.get(1); // false — bit 1 of 5 is 0
+bs.get(2); // true  — bit 2 of 5 is 1
+```
+
+For a two-slot BitSet, the array has two elements — the first covering bits `0–31`, the second covering bits `32–63`:
+
+```javascript
+const bs = new BitSet([5, 1]);
+//                     ^  ^ integer at slot 1: value 1 → bit 32 is set
+//                     | integer at slot 0: value 5 → bits 0 and 2 are set
+
+bs.getData(); // [5, 1]
+bs.length;    // 64  (2 integers × 32 bits each)
+
+bs.get(0);  // true  — from slot 0, value 5 (0b101), bit 0
+bs.get(1);  // false — from slot 0, value 5 (0b101), bit 1
+bs.get(2);  // true  — from slot 0, value 5 (0b101), bit 2
+bs.get(32); // true  — from slot 1, value 1 (0b001), bit 0
+```
+
+The raw integer array is ideal for **network transfer and persistence** — instead of serializing a long binary string, you can send or store the compact integer array and reconstruct the BitSet on the other end:
+
+```javascript
+// Serialize for storage or network transfer
+const payload = JSON.stringify(bs.getData()); // "[5,1]"
+
+// Later, reconstruct from the stored payload
+const restored = new BitSet(JSON.parse(payload));
+restored.get(0);  // true
+restored.get(32); // true
+```
+
+<Warning>
+`getData()` returns a **live reference** to the internal array — mutating it directly will corrupt the BitSet's state. If you need to store or pass the data safely, make a copy first: `[...bs.getData()]` or `bs.getData().slice()`.
+</Warning>
+
+## Reconstructing from raw data
+
+You can pass an array of integers directly to the `BitSet` constructor to recreate a previously serialized BitSet. The constructor treats each element as one 32-bit slot and sets `length` to `32 × array.length` automatically.
+
+```javascript
+// Original BitSet, serialized and stored somewhere
+const stored = [5, 1]; // previously obtained via getData()
+
+// Reconstruct
+const bs = new BitSet(stored);
+
+bs.length;    // 64  — always 32 × number of integers
+bs.getData(); // [5, 1]
+bs.get(0);    // true
+bs.get(2);    // true
+bs.get(32);   // true
+bs.stringify();
+// "0000000000000000000000000000000100000000000000000000000000000101"
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ slot 1 (bits 32–63)
+//                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ slot 0 (bits 0–31)
+```
+
+<Note>
+When reconstructing from raw integers, the resulting `length` is always a multiple of 32 — even if the original BitSet had a non-multiple length (for example, `new BitSet(3)` uses 1 integer but has `length = 3`, while `new BitSet([...new BitSet(3).getData()])` will have `length = 32`). If the exact original length matters, store it alongside the raw data.
+</Note>
+
+<CodeGroup>
+
+```javascript Round-trip: serialize and restore
+const original = new BitSet(48);
+original.set(0);
+original.set(47);
+
+// Serialize
+const rawIntegers = original.getData().slice(); // copy, not live reference
+const asJson = JSON.stringify(rawIntegers);     // "[1,32768]"
+
+// Restore
+const restored = new BitSet(JSON.parse(asJson));
+restored.get(0);  // true
+restored.get(47); // true
+restored.length;  // 64 (next multiple of 32 above 48)
+```
+
+```javascript Inspecting slot boundaries
+const bs = new BitSet(96);
+bs.set(0);   // slot 0, bit 0
+bs.set(31);  // slot 0, bit 31
+bs.set(32);  // slot 1, bit 0
+bs.set(63);  // slot 1, bit 31
+bs.set(64);  // slot 2, bit 0
+
+const data = bs.getData();
+// data[0] = (1 << 0) | (1 << 31) = -2147483647 (signed 32-bit)
+// data[1] = (1 << 0) | (1 << 31) = -2147483647 (same pattern)
+// data[2] = 1            = 2^0
+console.log(data.length); // 3
+```
+
+</CodeGroup>

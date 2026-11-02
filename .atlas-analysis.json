@@ -1,0 +1,61 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "BitSetJS",
+  "projectDescription": "A JavaScript library for creating and manipulating memory-efficient bit arrays (BitSets) in ES6, supporting bit operations, counting, and serialization.",
+  "theme": "luma",
+  "primaryColor": "#2563EB",
+  "lightColor": "#DBEAFE",
+  "darkColor": "#1E3A8A",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": ["introduction", "installation", "quickstart"]
+      },
+      {
+        "group": "Core Concepts",
+        "pages": ["concepts/bitset-basics", "concepts/memory-model"]
+      },
+      {
+        "group": "API Reference",
+        "pages": [
+          "api/constructor",
+          "api/bit-operations",
+          "api/serialization",
+          "api/utilities"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": ["guides/browser-usage", "guides/commonjs-usage", "guides/es5-compatibility"]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Create bit arrays of any size with configurable default values",
+    "Get, set, toggle, and clear individual bits by index",
+    "Count the number of set (1) bits with count()",
+    "Invert all bits in place with invert()",
+    "Serialize to and from binary strings (e.g. '001101')",
+    "Serialize to and from plain integer arrays for network transfer",
+    "Memory-efficient internal storage using 32-bit integers",
+    "Works in both the browser (global) and Node.js (CommonJS)",
+    "ES5-compatible build distributed alongside the ES6 version"
+  ],
+  "publicApiSurface": [
+    "new BitSet(size?: number, defaultValue?: 0|1)",
+    "new BitSet(binaryString: string)",
+    "new BitSet(intArray: number[])",
+    "BitSet.prototype.length",
+    "BitSet.prototype.get(n: number): boolean | null",
+    "BitSet.prototype.set(n: number): boolean",
+    "BitSet.prototype.clear(n: number): boolean",
+    "BitSet.prototype.toggle(n: number): boolean",
+    "BitSet.prototype.invert(): BitSet",
+    "BitSet.prototype.count(): number",
+    "BitSet.prototype.stringify(): string",
+    "BitSet.prototype.toArray(): number[]",
+    "BitSet.prototype.getData(): number[]",
+    "BitSet.prototype.toString(): string"
+  ]
+}

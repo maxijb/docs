@@ -1,0 +1,168 @@
+---
+title: "Install and Use BitSetJS With Node.js and CommonJS"
+sidebarTitle: "Node.js / CommonJS"
+description: "Require bit-set-js in any Node.js project. Walk through creating BitSets, manipulating bits, serializing state, and transferring data between services."
+---
+
+BitSetJS integrates directly into any Node.js project as a standard CommonJS module. After installation you `require` it once, and the `BitSet` constructor is ready to use. Because the library stores bits packed into 32-bit integers, it is well-suited for scenarios where you need to track large numbers of boolean flags with minimal memory overhead — user permissions, feature toggles, presence bitmaps, and similar data structures.
+
+## Requiring the module
+
+Install the package, then require it by its package name:
+
+```bash
+npm install bit-set-js
+```
+
+```javascript
+const BitSet = require('bit-set-js');
+```
+
+The `main` field in `package.json` points to `lib/BitSet.js`, so Node.js resolves `bit-set-js` to the ES6 build automatically. You do not need to reference the file path directly.
+
+## Creating and manipulating a BitSet
+
+The `BitSet` constructor accepts three different argument forms:
+
+- **`new BitSet(size, value)`** — creates a `size`-bit set with every bit initialised to `value` (`0` or `1`). Both parameters are optional and default to `32` and `0`.
+- **`new BitSet(binaryString)`** — parses a string of `'0'`s and `'1'`s. The rightmost character maps to bit 0.
+- **`new BitSet(intArray)`** — restores a BitSet from a previously serialized array of integers (see [Serializing for storage or transport](#serializing-for-storage-or-transport)).
+
+Once you have an instance, the core methods are `set(n)`, `get(n)`, `clear(n)`, `toggle(n)`, and `invert()`. Here is a realistic example that models 16 per-resource permissions across four categories:
+
+```javascript
+const BitSet = require('bit-set-js');
+
+// 16-bit set — one bit per permission, all initially denied
+const permissions = new BitSet(16, 0);
+
+// Permission bit positions
+const CAN_READ    = 0;
+const CAN_WRITE   = 1;
+const CAN_DELETE  = 2;
+const CAN_PUBLISH = 3;
+const CAN_ADMIN   = 4;
+
+// Grant read, write, and publish
+permissions.set(CAN_READ);
+permissions.set(CAN_WRITE);
+permissions.set(CAN_PUBLISH);
+
+// Check individual permissions
+console.log('Read:',    permissions.get(CAN_READ));    // true
+console.log('Write:',   permissions.get(CAN_WRITE));   // true
+console.log('Delete:',  permissions.get(CAN_DELETE));  // false
+console.log('Publish:', permissions.get(CAN_PUBLISH)); // true
+console.log('Admin:',   permissions.get(CAN_ADMIN));   // false
+
+// Revoke write access
+permissions.clear(CAN_WRITE);
+console.log('Write after clear:', permissions.get(CAN_WRITE)); // false
+
+// Toggle admin on and then check the count of granted permissions
+permissions.toggle(CAN_ADMIN);
+console.log('Active permissions:', permissions.count()); // 3 (read + publish + admin)
+
+// Visual snapshot — rightmost character is bit 0
+console.log(permissions.stringify());
+// "0000000000011001"  (bit 0 = read, bit 3 = publish, bit 4 = admin)
+```
+
+<Note>
+  `get(n)` returns `true` or `false` for valid bit positions and `null` when `n` is greater than or equal to `length`. Always guard against `null` if you are working with dynamic indices.
+</Note>
+
+## Serializing for storage or transport
+
+`getData()` returns the internal array of 32-bit integers that backs the BitSet. This compact representation is the recommended way to persist a BitSet to a database or transmit it over HTTP, because the number of integers is only `Math.ceil(length / 32)` — far smaller than a JSON array of individual boolean values.
+
+```javascript
+const BitSet = require('bit-set-js');
+
+const original = new BitSet(64, 0);
+original.set(0);
+original.set(10);
+original.set(33);
+original.set(62);
+
+// Serialize — returns a plain JavaScript array of integers
+const serialized = original.getData();
+console.log('Serialized:', serialized);
+// e.g. [ 1025, 1073741826 ]
+
+// Send `serialized` to a remote service, save it to a database,
+// or store it in localStorage as JSON.
+const json = JSON.stringify(serialized);
+
+// --- On the receiving end ---
+
+// Reconstruct by passing the integer array to the constructor
+const restored = new BitSet(JSON.parse(json));
+
+console.log('Bit 0 restored:',  restored.get(0));  // true
+console.log('Bit 10 restored:', restored.get(10)); // true
+console.log('Bit 33 restored:', restored.get(33)); // true
+console.log('Bit 62 restored:', restored.get(62)); // true
+console.log('Bit 5 restored:',  restored.get(5));  // false
+```
+
+When you reconstruct from an integer array the `length` property is set to `32 * intArray.length`, so a 64-bit set round-trips correctly with two integers.
+
+<Tip>
+  Use `stringify()` during development and debugging — it returns a human-readable binary string like `"0000000000000000000000001000000000000000000000000000010000000001"` that makes it easy to see which bits are set at a glance. Use `getData()` for storage and network transfer; the integer array is orders of magnitude more compact than the string form for large BitSets.
+</Tip>
+
+## Full working example
+
+The following script combines installation, construction, manipulation, and serialization into a single runnable file:
+
+```javascript
+// permissions.js
+'use strict';
+
+const BitSet = require('bit-set-js');
+
+// --- Build a permission set ---
+const PERMISSION_COUNT = 16;
+const perms = new BitSet(PERMISSION_COUNT, 0);
+
+const CAN_READ    = 0;
+const CAN_WRITE   = 1;
+const CAN_DELETE  = 2;
+const CAN_PUBLISH = 3;
+const CAN_ADMIN   = 4;
+
+perms.set(CAN_READ);
+perms.set(CAN_WRITE);
+perms.set(CAN_PUBLISH);
+
+console.log('=== Initial permissions ===');
+console.log('Binary:', perms.stringify());
+console.log('Active count:', perms.count());
+
+// --- Revoke a permission ---
+perms.clear(CAN_WRITE);
+console.log('\n=== After revoking write ===');
+console.log('Write allowed:', perms.get(CAN_WRITE)); // false
+console.log('Active count:', perms.count());
+
+// --- Serialize for storage ---
+const payload = perms.getData();
+console.log('\n=== Serialized payload ===');
+console.log(JSON.stringify(payload));
+
+// --- Reconstruct on another node / service ---
+const restored = new BitSet(payload);
+console.log('\n=== Restored from payload ===');
+console.log('Read allowed:',    restored.get(CAN_READ));    // true
+console.log('Write allowed:',   restored.get(CAN_WRITE));   // false
+console.log('Publish allowed:', restored.get(CAN_PUBLISH)); // true
+console.log('Admin allowed:',   restored.get(CAN_ADMIN));   // false
+console.log('Binary:', restored.stringify());
+```
+
+Run it with:
+
+```bash
+node permissions.js
+```

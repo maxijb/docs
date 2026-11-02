@@ -1,0 +1,163 @@
+---
+title: "BitSet Constructor — Three Initialization Styles"
+sidebarTitle: "Constructor"
+description: "Create a BitSet from a size and default value, from a binary string like '0101', or from a raw integer array. Learn all three constructor overloads."
+---
+
+The `BitSet` constructor accepts three distinct forms of input, giving you full control over how you initialize a bit array. You can create a blank (or fully-set) array of a given size, decode a binary string directly into bits, or restore a previously serialized bit array by passing the raw integer data back in. All three approaches produce a fully functional `BitSet` instance with the same methods available.
+
+## Constructor Overloads
+
+<Tabs>
+  <Tab title="Size & Default">
+    The most common way to create a `BitSet` is by specifying how many bits you need, and optionally a default value to fill every bit with.
+
+    ```javascript
+    new BitSet(size?, value?)
+    ```
+
+    <ParamField path="size" type="number" default="32">
+      The total number of bits in the array. Defaults to `32` if omitted. Internally, bits are packed into 32-bit integers, so a size of `64` allocates two integers, `96` allocates three, and so on.
+    </ParamField>
+
+    <ParamField path="value" type="number" default="0">
+      The initial value for every bit. Pass `0` (the default) to initialize all bits to `0`, or pass `1` to initialize all bits to `1`.
+    </ParamField>
+
+    **Examples:**
+
+    ```javascript
+    // Default: 32 bits, all zeros
+    const a = new BitSet();
+    a.stringify(); // "00000000000000000000000000000000"
+    a.length;      // 32
+
+    // 8 bits, all zeros
+    const b = new BitSet(8);
+    b.stringify(); // "00000000"
+
+    // 8 bits, all ones
+    const c = new BitSet(8, 1);
+    c.stringify(); // "11111111"
+
+    // 3 bits, all ones
+    const d = new BitSet(3, 1);
+    d.stringify(); // "111"
+    ```
+
+    <Note>
+      When `value` is `1`, the backing integers are initialized to `-1` (all 32 bits set). BitSet respects your `length` when iterating, so bits beyond your declared size are never exposed — but they are present in the underlying storage.
+    </Note>
+  </Tab>
+
+  <Tab title="Binary String">
+    Pass a binary string — a sequence of `'0'` and `'1'` characters — to initialize bits directly from a human-readable representation. The rightmost character maps to bit index `0`, and the leftmost character maps to the highest index.
+
+    ```javascript
+    new BitSet(binaryString)
+    ```
+
+    <ParamField path="binaryString" type="string">
+      A string composed entirely of `'0'` and `'1'` characters. The string's length determines the `BitSet`'s `length`. The rightmost character is bit `0`; the leftmost is bit `length - 1`.
+    </ParamField>
+
+    **Examples:**
+
+    ```javascript
+    // "0101": bit 0 = 1, bit 1 = 0, bit 2 = 1, bit 3 = 0
+    const bs = new BitSet("0101");
+    bs.length;      // 4
+    bs.get(0);      // true  (rightmost character)
+    bs.get(1);      // false
+    bs.get(2);      // true
+    bs.get(3);      // false (leftmost character)
+    bs.stringify(); // "0101"
+
+    // "101": three bits, bit 0 = 1, bit 1 = 0, bit 2 = 1
+    const bs2 = new BitSet("101");
+    bs2.stringify(); // "101"
+    bs2.getData();   // [5]  (5 = 0b101 in binary)
+    ```
+
+    <Warning>
+      The string must contain only `'0'` and `'1'` characters. Passing any other character — including spaces, letters, or punctuation — throws the following error:
+
+      ```
+      BitSet can convert an string only composed by 0s and 1s
+      ```
+    </Warning>
+  </Tab>
+
+  <Tab title="Integer Array">
+    You can reconstruct a `BitSet` from a raw array of 32-bit integers — exactly the format produced by `getData()`. This is the intended path for restoring a `BitSet` after network transfer or persistence.
+
+    ```javascript
+    new BitSet(intArray)
+    ```
+
+    <ParamField path="intArray" type="number[]">
+      An array of 32-bit integers representing the packed bit data. Each integer holds 32 bits. The total `length` of the resulting `BitSet` will be `32 × intArray.length`.
+    </ParamField>
+
+    **Examples:**
+
+    ```javascript
+    // [5] = binary 101 → bits 0 and 2 are set
+    const bs = new BitSet([5]);
+    bs.length;      // 32  (one integer × 32 bits)
+    bs.get(0);      // true
+    bs.get(1);      // false
+    bs.get(2);      // true
+    bs.stringify(); // "00000000000000000000000000000101"
+
+    // Two integers → 64-bit BitSet
+    const bs2 = new BitSet([5, 1]);
+    bs2.length;     // 64
+    bs2.get(0);     // true   (bit 0 of first integer, 5 = 0b101)
+    bs2.get(1);     // false
+    bs2.get(2);     // true
+    bs2.get(32);    // true   (bit 0 of second integer, 1 = 0b1)
+    ```
+
+    <Tip>
+      The integer array constructor is designed to pair with `getData()`. Call `getData()` to extract the backing data from any `BitSet`, transfer or store it, then pass it back to `new BitSet(intArray)` to restore the original state exactly.
+    </Tip>
+  </Tab>
+</Tabs>
+
+## The `length` Property
+
+Every `BitSet` instance exposes a `length` property that tells you the total number of bits the array was created with. This is fixed at construction time and does not change.
+
+```javascript
+const a = new BitSet();        // default 32-bit
+a.length; // 32
+
+const b = new BitSet(96);
+b.length; // 96
+
+const c = new BitSet("0101");
+c.length; // 4  — length matches the string's character count
+
+const d = new BitSet([5, 3]); // two 32-bit integers
+d.length; // 64
+```
+
+<Note>
+  `length` reflects the *total capacity* of the bit array, not the number of bits currently set to `1`. To count set bits, use [`count()`](/api/utilities).
+</Note>
+
+## Error Handling
+
+The only constructor input that causes an explicit error is a malformed binary string. If you pass a string containing any character other than `'0'` or `'1'`, the constructor throws a descriptive string:
+
+```javascript
+try {
+  const bs = new BitSet("abc");
+} catch (err) {
+  console.log(err);
+  // "BitSet can convert an string only composed by 0s and 1s"
+}
+```
+
+No error is thrown for numeric or array inputs. Passing an integer array sets the `length` to `32 × intArray.length`, so take care that the array you pass accurately represents the bit data you intend to restore.
