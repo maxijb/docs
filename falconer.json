@@ -39,42 +39,108 @@
       {
         "from": "/how-to/:slug*",
         "to": "/guides/:slug*"
+      },
+      {
+        "from": "/faq/:slug*",
+        "to": "/introduction"
+      },
+      {
+        "from": "/docs/getting-started",
+        "to": "/installation"
+      },
+      {
+        "from": "/api/v1/:path*",
+        "to": "/api/:path*"
+      },
+      {
+        "from": "/runtimes/deno",
+        "to": "/guides/deno-runtime"
+      },
+      {
+        "from": "/benchmarks/:slug*",
+        "to": "/Benchmarks"
       }
     ],
     "tabs": [
       {
-        "tab": "Get Started",
+        "tab": "Documentation",
         "pages": [
           {
-            "group": "Basics",
+            "group": "Get Started",
+            "icon": "rocket",
             "pages": [
-              "quickstart.mdx"
+              "introduction.mdx",
+              "installation.mdx",
+              {
+                "group": "Basics",
+                "pages": [
+                  "quickstart.mdx",
+                  {
+                    "group": "Runtimes",
+                    "icon": "server",
+                    "pages": [
+                      "guides/node-usage.mdx",
+                      "guides/bun.mdx",
+                      {
+                        "group": "Edge runtimes",
+                        "pages": [
+                          "guides/deno-runtime.mdx"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             ]
           },
-          "introduction.mdx",
-          "installation.mdx"
+          {
+            "group": "Concepts",
+            "icon": "book",
+            "pages": [
+              "concepts/bitset-basics.mdx",
+              "guides/memory-model.mdx"
+            ]
+          }
         ]
       },
       {
         "tab": "API Reference",
         "pages": [
-          "api/constructor.mdx",
-          "concepts/bitset-basics.mdx",
-          "guides/memory-model.mdx",
-          "api/bit-operations.mdx",
-          "api/serialization.mdx"
+          {
+            "group": "Core API",
+            "icon": "brackets-curly",
+            "pages": [
+              "api/constructor.mdx",
+              "api/bit-operations.mdx"
+            ]
+          },
+          {
+            "group": "Serialization",
+            "icon": "code",
+            "pages": [
+              "api/serialization.mdx",
+              "api/utilities.mdx",
+              "quickstart.mdx"
+            ]
+          }
         ]
       },
       {
         "tab": "Guides",
         "pages": [
           "Benchmarks.mdx",
-          "guides/browser-usage.mdx",
-          "guides/node-usage.mdx",
-          "guides/bun.mdx",
-          "guides/typescript.mdx",
-          "guides/deno-runtime.mdx"
+          {
+            "group": "Browser",
+            "pages": [
+              "guides/browser-usage.mdx",
+              "guides/typescript.mdx"
+            ]
+          }
         ]
+      },
+      {
+        "tab": "Benchmarks",
+        "pages": []
       }
     ]
   }

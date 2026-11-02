@@ -79,7 +79,8 @@
       },
       {
         "tab": "Guides",
-        "groups": [
+        "pages": [
+          "Benchmarks",
           {
             "group": "Browser",
             "pages": [
@@ -87,12 +88,6 @@
               "guides/typescript"
             ]
           }
-        ]
-      },
-      {
-        "tab": "Benchmarks",
-        "pages": [
-          "Benchmarks"
         ]
       }
     ]
@@ -167,6 +162,10 @@
     {
       "source": "/runtimes/deno",
       "destination": "/guides/deno-runtime"
+    },
+    {
+      "source": "/benchmarks/:slug*",
+      "destination": "/Benchmarks"
     }
   ]
 }
