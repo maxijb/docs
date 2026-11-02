@@ -28,9 +28,9 @@
       {
         "tab": "API Reference",
         "pages": [
+          "api/constructor",
           "concepts/bitset-basics",
           "guides/memory-model",
-          "api/constructor",
           "api/bit-operations",
           "api/serialization"
         ]
@@ -40,6 +40,7 @@
         "pages": [
           "guides/browser-usage",
           "guides/commonjs-usage",
+          "guides/typescript",
           {
             "group": "Advanced",
             "pages": [
