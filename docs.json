@@ -36,7 +36,8 @@
         "pages": [
           "api/constructor",
           "api/bit-operations",
-          "api/serialization"
+          "api/serialization",
+          "api/utilities"
         ]
       },
       {
@@ -46,13 +47,13 @@
           "guides/commonjs-usage",
           "guides/es5-compatibility"
         ]
-      },
-      {
-        "tab": "Tab 2",
-        "pages": [
-          "api/utilities"
-        ]
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/old-intro",
+      "destination": "/introduction"
+    }
+  ]
 }
