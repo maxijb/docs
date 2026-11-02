@@ -11,7 +11,7 @@ BitSetJS stores bits in a private array of plain JavaScript integers, where each
 The number of integers in the backing array depends directly on the BitSet's length:
 
 | BitSet length | Integers allocated | Calculation |
-|---|---|---|
+|---------------|--------------------|-------------|
 | 1 – 32 bits | 1 | `Math.ceil(32 / 32) = 1` |
 | 33 – 64 bits | 2 | `Math.ceil(64 / 32) = 2` |
 | 65 – 96 bits | 3 | `Math.ceil(96 / 32) = 3` |
@@ -148,7 +148,6 @@ When reconstructing from raw integers, the resulting `length` is always a multip
 </Note>
 
 <CodeGroup>
-
 ```javascript Round-trip: serialize and restore
 const original = new BitSet(48);
 original.set(0);

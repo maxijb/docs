@@ -22,7 +22,7 @@
             "icon": "graduation-cap",
             "pages": [
               "concepts/bitset-basics",
-              "guides/memory-model"
+              "tutorials/memory-model"
             ]
           },
           {
@@ -39,12 +39,12 @@
                     "group": "Runtimes",
                     "icon": "server",
                     "pages": [
-                      "guides/node-usage",
-                      "guides/bun",
+                      "tutorials/node-usage",
+                      "tutorials/bun",
                       {
                         "group": "Edge & serverless",
                         "pages": [
-                          "guides/deno-runtime"
+                          "tutorials/deno-runtime"
                         ]
                       }
                     ]
@@ -71,7 +71,7 @@
             "icon": "code",
             "pages": [
               "api/serialization",
-              "api/utilities"
+              "concepts/utilities"
             ]
           }
         ]
@@ -83,8 +83,8 @@
           {
             "group": "Browser",
             "pages": [
-              "guides/browser-usage",
-              "guides/typescript"
+              "tutorials/browser-usage",
+              "tutorials/typescript"
             ]
           }
         ]

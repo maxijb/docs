@@ -41,12 +41,8 @@
         "to": "/guides/:slug*"
       },
       {
-        "from": "/faq/:slug*",
-        "to": "/introduction"
-      },
-      {
         "from": "/docs/getting-started",
-        "to": "/installation"
+        "to": "/quickstart"
       },
       {
         "from": "/api/v1/:path*",
@@ -66,6 +62,14 @@
         "tab": "Documentation",
         "pages": [
           {
+            "group": "Concepts",
+            "icon": "graduation-cap",
+            "pages": [
+              "concepts/bitset-basics.mdx",
+              "tutorials/memory-model.mdx"
+            ]
+          },
+          {
             "group": "Get Started",
             "icon": "rocket",
             "pages": [
@@ -79,26 +83,18 @@
                     "group": "Runtimes",
                     "icon": "server",
                     "pages": [
-                      "guides/node-usage.mdx",
-                      "guides/bun.mdx",
+                      "tutorials/node-usage.mdx",
+                      "tutorials/bun.mdx",
                       {
-                        "group": "Edge runtimes",
+                        "group": "Edge & serverless",
                         "pages": [
-                          "guides/deno-runtime.mdx"
+                          "tutorials/deno-runtime.mdx"
                         ]
                       }
                     ]
                   }
                 ]
               }
-            ]
-          },
-          {
-            "group": "Concepts",
-            "icon": "book",
-            "pages": [
-              "concepts/bitset-basics.mdx",
-              "guides/memory-model.mdx"
             ]
           }
         ]
@@ -119,8 +115,7 @@
             "icon": "code",
             "pages": [
               "api/serialization.mdx",
-              "api/utilities.mdx",
-              "quickstart.mdx"
+              "concepts/utilities.mdx"
             ]
           }
         ]
@@ -132,15 +127,11 @@
           {
             "group": "Browser",
             "pages": [
-              "guides/browser-usage.mdx",
-              "guides/typescript.mdx"
+              "tutorials/browser-usage.mdx",
+              "tutorials/typescript.mdx"
             ]
           }
         ]
-      },
-      {
-        "tab": "Benchmarks",
-        "pages": []
       }
     ]
   }
