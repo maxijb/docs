@@ -41,12 +41,7 @@
           "guides/browser-usage",
           "guides/commonjs-usage",
           "guides/typescript",
-          {
-            "group": "Advanced",
-            "pages": [
-              "guides/es5-compatibility"
-            ]
-          }
+          "guides/deno"
         ]
       }
     ]
