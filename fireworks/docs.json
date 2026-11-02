@@ -47,7 +47,10 @@
               "deployments/autoscaling",
               {
                 "group": "Custom models",
-                "pages": ["models/uploading-custom-models", "models/uploading-custom-models-api"]
+                "pages": [
+                  "models/uploading-custom-models",
+                  "models/uploading-custom-models-api"
+                ]
               },
               "models/quantization",
               {
@@ -134,7 +137,9 @@
           },
           {
             "group": "Fire Pass",
-            "pages": ["firepass"]
+            "pages": [
+              "firepass"
+            ]
           },
           {
             "group": "Administration",
@@ -175,25 +180,10 @@
             ]
           },
           {
-            "group": "Integrations",
-            "pages": [
-              "ecosystem/integrations/azure-foundry",
-              {
-                "group": "Bring Your Own Cluster",
-                "pages": [
-                  "ecosystem/integrations/byoc/overview",
-                  "ecosystem/integrations/byoc/how-setup-works",
-                  "ecosystem/integrations/byoc/operational-model"
-                ]
-              },
-              "ecosystem/integrations/development-setup",
-              "ecosystem/integrations/agent-frameworks",
-              "ecosystem/integrations/mlops-observability"
-            ]
-          },
-          {
             "group": "Reference",
-            "pages": ["getting-started/glossary"]
+            "pages": [
+              "getting-started/glossary"
+            ]
           }
         ]
       },
@@ -202,15 +192,26 @@
         "groups": [
           {
             "group": "Get started",
-            "pages": ["nexus", "nexus/quickstart"]
+            "pages": [
+              "nexus",
+              "nexus/quickstart"
+            ]
           },
           {
             "group": "Nexus CLI",
-            "pages": ["nexus/cli", "nexus/manual-setup", "nexus/cli-reference", "nexus/release-notes"]
+            "pages": [
+              "nexus/cli",
+              "nexus/manual-setup",
+              "nexus/cli-reference",
+              "nexus/release-notes"
+            ]
           },
           {
             "group": "Model Orchestration",
-            "pages": ["nexus/auto", "nexus/open-models"]
+            "pages": [
+              "nexus/auto",
+              "nexus/open-models"
+            ]
           },
           {
             "group": "Harness Support",
@@ -232,7 +233,10 @@
               },
               {
                 "group": "Cowork",
-                "pages": ["nexus/harnesses/chatgpt", "nexus/harnesses/claude-desktop"]
+                "pages": [
+                  "nexus/harnesses/chatgpt",
+                  "nexus/harnesses/claude-desktop"
+                ]
               }
             ]
           },
@@ -241,7 +245,10 @@
             "pages": [
               {
                 "group": "Model Providers",
-                "pages": ["nexus/provider-keys", "nexus/provider-keys/bedrock"]
+                "pages": [
+                  "nexus/provider-keys",
+                  "nexus/provider-keys/bedrock"
+                ]
               },
               "nexus/usage-limits"
             ]
@@ -265,23 +272,33 @@
           {
             "group": "API Reference",
             "icon": "brackets-curly",
-            "pages": ["api-reference/introduction", "tools-sdks/python-sdk"]
+            "pages": [
+              "api-reference/introduction",
+              "tools-sdks/python-sdk"
+            ]
           },
           {
             "group": "Inference",
             "icon": "zap",
             "pages": [
               {
-                "group": "OpenAI-compatible API",
-                "pages": ["api-reference/post-chatcompletions", "api-reference/post-completions"]
+                "group": "OpenAI-compatible API (renamed)",
+                "pages": [
+                  "api-reference/post-completions"
+                ]
               },
               {
                 "group": "Anthropic-compatible API",
-                "pages": ["api-reference/anthropic-messages"]
+                "pages": [
+                  "api-reference/anthropic-messages"
+                ]
               },
               {
                 "group": "System One",
-                "pages": ["api-reference/post-systemone", "api-reference/post-decisions"]
+                "pages": [
+                  "api-reference/post-systemone",
+                  "api-reference/post-decisions"
+                ]
               },
               {
                 "group": "Responses API",
@@ -323,7 +340,8 @@
                   "api-reference/update-deployment",
                   "api-reference/delete-deployment",
                   "api-reference/undelete-deployment",
-                  "api-reference/scale-deployment"
+                  "api-reference/scale-deployment",
+                  "api-reference/post-chatcompletions"
                 ]
               },
               {
@@ -449,7 +467,7 @@
           },
           {
             "group": "Evals",
-            "icon": "check-circle",
+            "icon": "flask",
             "pages": [
               {
                 "group": "Evaluation Jobs",
@@ -493,7 +511,9 @@
               },
               {
                 "group": "Audit Logs",
-                "pages": ["api-reference/list-audit-logs"]
+                "pages": [
+                  "api-reference/list-audit-logs"
+                ]
               },
               {
                 "group": "Billing",
@@ -505,7 +525,10 @@
               },
               {
                 "group": "Policy Settings",
-                "pages": ["api-reference/get-policy-settings", "api-reference/update-policy-settings"]
+                "pages": [
+                  "api-reference/get-policy-settings",
+                  "api-reference/update-policy-settings"
+                ]
               },
               {
                 "group": "Users",
@@ -518,7 +541,11 @@
               },
               {
                 "group": "API Keys",
-                "pages": ["api-reference/create-api-key", "api-reference/list-api-keys", "api-reference/delete-api-key"]
+                "pages": [
+                  "api-reference/create-api-key",
+                  "api-reference/list-api-keys",
+                  "api-reference/delete-api-key"
+                ]
               },
               {
                 "group": "Secrets",
@@ -535,6 +562,100 @@
         ]
       },
       {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Reference",
+            "pages": [
+              "tools-sdks/openai-compatibility",
+              "tools-sdks/anthropic-compatibility",
+              "tools-sdks/nim-compatibility"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "examples/introduction",
+              "examples/cookbooks"
+            ]
+          },
+          {
+            "group": "FAQ",
+            "pages": [
+              {
+                "group": "Models & Inference",
+                "pages": [
+                  "faq-new/models-inference/what-is-the-difference-between-serverless-and-on-demand",
+                  "faq-new/models-inference/what-is-a-token",
+                  "faq-new/models-inference/how-to-check-if-a-model-is-available-on-serverless",
+                  "faq-new/models-inference/does-fireworks-support-custom-base-models",
+                  "faq-new/models-inference/theres-a-model-i-would-like-to-use-that-isnt-available-on-fireworks-can-i-reques",
+                  "faq-new/models-inference/does-the-api-support-batching-and-load-balancing"
+                ]
+              },
+              {
+                "group": "Billing & Pricing",
+                "pages": [
+                  "faq-new/billing-pricing/how-much-does-fireworks-cost",
+                  "faq-new/billing-pricing/how-does-billing-and-credit-usage-work",
+                  "faq-new/billing-pricing/what-happens-when-i-finish-my-1-dollar-credit",
+                  "faq-new/billing-pricing/why-might-my-account-be-suspended-even-with-remaining-credits",
+                  "faq-new/billing-pricing/is-prompt-caching-billed-differently",
+                  "faq-new/billing-pricing/are-there-extra-fees-for-serving-fine-tuned-models",
+                  "faq-new/billing-pricing/are-there-discounts-for-bulk-usage",
+                  "faq-new/billing-pricing/how-many-tokens-per-image"
+                ]
+              },
+              {
+                "group": "Deployment & Infrastructure",
+                "pages": [
+                  "faq-new/deployment-infrastructure/what-is-a-deployment-shape",
+                  "faq-new/deployment-infrastructure/is-latency-guaranteed-for-serverless-models",
+                  "faq-new/deployment-infrastructure/are-there-any-quotas-for-serverless",
+                  "faq-new/deployment-infrastructure/how-does-the-system-scale",
+                  "faq-new/deployment-infrastructure/do-you-support-auto-scaling",
+                  "faq-new/deployment-infrastructure/how-does-autoscaling-affect-my-costs",
+                  "faq-new/deployment-infrastructure/whats-the-supported-throughput",
+                  "faq-new/deployment-infrastructure/what-factors-affect-the-number-of-simultaneous-requests-that-can-be-handled",
+                  "faq-new/deployment-infrastructure/what-are-the-rate-limits-for-on-demand-deployments",
+                  "faq-new/deployment-infrastructure/how-does-billing-work-for-on-demand-deployments",
+                  "faq-new/deployment-infrastructure/how-does-billing-and-scaling-work-for-on-demand-gpu-deployments",
+                  "faq-new/deployment-infrastructure/do-you-provide-notice-before-removing-model-availability",
+                  "faq-new/deployment-infrastructure/why-am-i-experiencing-request-timeout-errors-and-slow-response-times-with-server"
+                ]
+              },
+              {
+                "group": "Account & Access",
+                "pages": [
+                  "faq-new/account-access/i-have-multiple-fireworks-accounts-when-i-try-to-login-with-google-on-fireworks",
+                  "faq-new/account-access/what-should-i-do-if-i-cant-access-my-company-account-after-being-invited-when-i",
+                  "faq-new/account-access/what-email-does-github-authentication-use",
+                  "faq-new/account-access/what-email-does-linkedin-authentication-use",
+                  "faq-new/account-access/how-do-i-close-my-fireworksai-account"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "ecosystem/integrations/azure-foundry",
+              {
+                "group": "Bring Your Own Cluster",
+                "pages": [
+                  "ecosystem/integrations/byoc/overview",
+                  "ecosystem/integrations/byoc/how-setup-works",
+                  "ecosystem/integrations/byoc/operational-model"
+                ]
+              },
+              "ecosystem/integrations/development-setup",
+              "ecosystem/integrations/agent-frameworks",
+              "ecosystem/integrations/mlops-observability"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "CLI Reference",
         "groups": [
           {
@@ -545,7 +666,10 @@
               "tools-sdks/firectl/commands/authentication",
               {
                 "group": "account",
-                "pages": ["tools-sdks/firectl/commands/account-get", "tools-sdks/firectl/commands/account-list"]
+                "pages": [
+                  "tools-sdks/firectl/commands/account-get",
+                  "tools-sdks/firectl/commands/account-list"
+                ]
               },
               {
                 "group": "api-key",
@@ -689,7 +813,10 @@
               },
               {
                 "group": "reservation",
-                "pages": ["tools-sdks/firectl/commands/reservation-get", "tools-sdks/firectl/commands/reservation-list"]
+                "pages": [
+                  "tools-sdks/firectl/commands/reservation-get",
+                  "tools-sdks/firectl/commands/reservation-list"
+                ]
               },
               {
                 "group": "rlor-trainer-job",
@@ -770,80 +897,8 @@
       },
       {
         "tab": "Changelog",
-        "pages": ["updates/changelog"]
-      },
-      {
-        "tab": "Resources",
-        "groups": [
-          {
-            "group": "Reference",
-            "pages": [
-              "tools-sdks/openai-compatibility",
-              "tools-sdks/anthropic-compatibility",
-              "tools-sdks/nim-compatibility"
-            ]
-          },
-          {
-            "group": "Examples",
-            "pages": ["examples/introduction", "examples/cookbooks"]
-          },
-          {
-            "group": "FAQ",
-            "pages": [
-              {
-                "group": "Models & Inference",
-                "pages": [
-                  "faq-new/models-inference/what-is-the-difference-between-serverless-and-on-demand",
-                  "faq-new/models-inference/what-is-a-token",
-                  "faq-new/models-inference/how-to-check-if-a-model-is-available-on-serverless",
-                  "faq-new/models-inference/does-fireworks-support-custom-base-models",
-                  "faq-new/models-inference/theres-a-model-i-would-like-to-use-that-isnt-available-on-fireworks-can-i-reques",
-                  "faq-new/models-inference/does-the-api-support-batching-and-load-balancing"
-                ]
-              },
-              {
-                "group": "Billing & Pricing",
-                "pages": [
-                  "faq-new/billing-pricing/how-much-does-fireworks-cost",
-                  "faq-new/billing-pricing/how-does-billing-and-credit-usage-work",
-                  "faq-new/billing-pricing/what-happens-when-i-finish-my-1-dollar-credit",
-                  "faq-new/billing-pricing/why-might-my-account-be-suspended-even-with-remaining-credits",
-                  "faq-new/billing-pricing/is-prompt-caching-billed-differently",
-                  "faq-new/billing-pricing/are-there-extra-fees-for-serving-fine-tuned-models",
-                  "faq-new/billing-pricing/are-there-discounts-for-bulk-usage",
-                  "faq-new/billing-pricing/how-many-tokens-per-image"
-                ]
-              },
-              {
-                "group": "Deployment & Infrastructure",
-                "pages": [
-                  "faq-new/deployment-infrastructure/what-is-a-deployment-shape",
-                  "faq-new/deployment-infrastructure/is-latency-guaranteed-for-serverless-models",
-                  "faq-new/deployment-infrastructure/are-there-any-quotas-for-serverless",
-                  "faq-new/deployment-infrastructure/how-does-the-system-scale",
-                  "faq-new/deployment-infrastructure/do-you-support-auto-scaling",
-                  "faq-new/deployment-infrastructure/how-does-autoscaling-affect-my-costs",
-                  "faq-new/deployment-infrastructure/whats-the-supported-throughput",
-                  "faq-new/deployment-infrastructure/what-factors-affect-the-number-of-simultaneous-requests-that-can-be-handled",
-                  "faq-new/deployment-infrastructure/what-are-the-rate-limits-for-on-demand-deployments",
-                  "faq-new/deployment-infrastructure/how-does-billing-work-for-on-demand-deployments",
-                  "faq-new/deployment-infrastructure/how-does-billing-and-scaling-work-for-on-demand-gpu-deployments",
-                  "faq-new/deployment-infrastructure/do-you-provide-notice-before-removing-model-availability",
-                  "faq-new/deployment-infrastructure/why-am-i-experiencing-request-timeout-errors-and-slow-response-times-with-server"
-                ]
-              },
-              {
-                "group": "Account & Access",
-                "pages": [
-                  "faq-new/account-access/i-have-multiple-fireworks-accounts-when-i-try-to-login-with-google-on-fireworks",
-                  "faq-new/account-access/what-should-i-do-if-i-cant-access-my-company-account-after-being-invited-when-i",
-                  "faq-new/account-access/what-email-does-github-authentication-use",
-                  "faq-new/account-access/what-email-does-linkedin-authentication-use",
-                  "faq-new/account-access/how-do-i-close-my-fireworksai-account"
-                ]
-              }
-            ]
-          }
+        "pages": [
+          "updates/changelog"
         ]
       }
     ]
@@ -853,14 +908,20 @@
     "dark": "/logo/logo.svg"
   },
   "api": {
-    "openapi": ["openapi.yml", "merged.openapi.yaml"],
+    "openapi": [
+      "openapi.yml",
+      "merged.openapi.yaml"
+    ],
     "playground": {
       "display": "interactive",
       "proxy": false
     }
   },
   "contextual": {
-    "options": ["copy", "view"]
+    "options": [
+      "copy",
+      "view"
+    ]
   },
   "navbar": {
     "links": [
@@ -953,10 +1014,6 @@
     }
   },
   "redirects": [
-    {
-      "source": "/faq/account/access/setup-management",
-      "destination": "/faq-new/account-access/what-should-i-do-if-i-cant-access-my-company-account-after-being-invited-when-i"
-    },
     {
       "source": "/faq/billing-pricing-usage/billing/billing-management",
       "destination": "/faq-new/billing-pricing/what-happens-when-i-finish-my-1-dollar-credit"
@@ -2020,6 +2077,15 @@
     {
       "source": "/private-preview/decisions-api-k7q3",
       "destination": "/api-reference/post-systemone"
+    },
+    {
+      "source": "/legacy/quickstart",
+      "destination": "/getting-started/quickstart",
+      "permanent": false
+    },
+    {
+      "source": "/old-api/:path*",
+      "destination": "/api-reference/:path*"
     }
   ]
 }
