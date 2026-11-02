@@ -15,47 +15,6 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Concepts",
-            "icon": "graduation-cap",
-            "pages": [
-              "concepts/bitset-basics",
-              "tutorials/memory-model"
-            ]
-          },
-          {
-            "group": "Get Started",
-            "icon": "rocket",
-            "pages": [
-              "introduction",
-              "installation",
-              {
-                "group": "Basics",
-                "pages": [
-                  "quickstart",
-                  {
-                    "group": "Runtimes",
-                    "icon": "server",
-                    "pages": [
-                      "tutorials/node-usage",
-                      "tutorials/bun",
-                      {
-                        "group": "Edge & serverless",
-                        "pages": [
-                          "tutorials/deno-runtime"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
         "tab": "API Reference",
         "groups": [
           {
@@ -63,7 +22,48 @@
             "icon": "brackets-curly",
             "pages": [
               "api/constructor",
-              "api/bit-operations"
+              "api/bit-operations",
+              "tutorials/memory-model"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "introduction",
+              {
+                "group": "Basics",
+                "pages": [
+                  "installation",
+                  "quickstart",
+                  {
+                    "group": "Runtimes",
+                    "icon": "server",
+                    "pages": [
+                      "tutorials/node-usage",
+                      "tutorials/bun"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Edge & serverless",
+                "pages": [
+                  "tutorials/deno-runtime"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Concepts",
+            "icon": "graduation-cap",
+            "pages": [
+              "concepts/bitset-basics"
             ]
           },
           {
