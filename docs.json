@@ -82,8 +82,8 @@
           "Benchmarks",
           {
             "group": "Browser",
+            "root": "tutorials/browser-usage",
             "pages": [
-              "tutorials/browser-usage",
               "tutorials/typescript"
             ]
           }
