@@ -41,7 +41,8 @@
           "guides/browser-usage",
           "guides/commonjs-usage",
           "guides/typescript",
-          "guides/deno"
+          "guides/deno-runtime",
+          "guides/bun"
         ]
       }
     ]
