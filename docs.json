@@ -36,7 +36,7 @@
         ]
       },
       {
-        "tab": "How-to Guides",
+        "tab": "Guides",
         "pages": [
           "guides/browser-usage",
           "guides/commonjs-usage",
@@ -58,6 +58,10 @@
     {
       "source": "/concepts/:slug*",
       "destination": "/api/:slug*"
+    },
+    {
+      "source": "/how-to/:slug*",
+      "destination": "/guides/:slug*"
     }
   ]
 }

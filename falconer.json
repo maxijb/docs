@@ -35,6 +35,10 @@
       {
         "from": "/concepts/:slug*",
         "to": "/api/:slug*"
+      },
+      {
+        "from": "/how-to/:slug*",
+        "to": "/guides/:slug*"
       }
     ],
     "tabs": [
@@ -58,7 +62,7 @@
         ]
       },
       {
-        "tab": "How-to Guides",
+        "tab": "Guides",
         "pages": [
           "guides/browser-usage.mdx",
           "guides/commonjs-usage.mdx",
