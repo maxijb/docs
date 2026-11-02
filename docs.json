@@ -18,6 +18,14 @@
         "tab": "Documentation",
         "groups": [
           {
+            "group": "Concepts",
+            "icon": "graduation-cap",
+            "pages": [
+              "concepts/bitset-basics",
+              "guides/memory-model"
+            ]
+          },
+          {
             "group": "Get Started",
             "icon": "rocket",
             "pages": [
@@ -34,7 +42,7 @@
                       "guides/node-usage",
                       "guides/bun",
                       {
-                        "group": "Edge runtimes",
+                        "group": "Edge & serverless",
                         "pages": [
                           "guides/deno-runtime"
                         ]
@@ -43,14 +51,6 @@
                   }
                 ]
               }
-            ]
-          },
-          {
-            "group": "Concepts",
-            "icon": "book",
-            "pages": [
-              "concepts/bitset-basics",
-              "guides/memory-model"
             ]
           }
         ]
@@ -71,8 +71,7 @@
             "icon": "code",
             "pages": [
               "api/serialization",
-              "api/utilities",
-              "quickstart"
+              "api/utilities"
             ]
           }
         ]
@@ -148,12 +147,8 @@
       "destination": "/guides/:slug*"
     },
     {
-      "source": "/faq/:slug*",
-      "destination": "/introduction"
-    },
-    {
       "source": "/docs/getting-started",
-      "destination": "/installation"
+      "destination": "/quickstart"
     },
     {
       "source": "/api/v1/:path*",
