@@ -19,9 +19,9 @@
       {
         "tab": "Get Started",
         "pages": [
+          "quickstart",
           "introduction",
-          "installation",
-          "quickstart"
+          "installation"
         ]
       },
       {
@@ -41,7 +41,7 @@
         ]
       },
       {
-        "tab": "Guides",
+        "tab": "How-to Guides",
         "pages": [
           "guides/browser-usage",
           "guides/commonjs-usage",
