@@ -25,15 +25,10 @@
         ]
       },
       {
-        "tab": "Core Concepts",
-        "pages": [
-          "concepts/bitset-basics",
-          "guides/memory-model"
-        ]
-      },
-      {
         "tab": "API Reference",
         "pages": [
+          "concepts/bitset-basics",
+          "guides/memory-model",
           "api/constructor",
           "api/bit-operations",
           "api/serialization",
@@ -45,7 +40,12 @@
         "pages": [
           "guides/browser-usage",
           "guides/commonjs-usage",
-          "guides/es5-compatibility"
+          {
+            "group": "Advanced",
+            "pages": [
+              "guides/es5-compatibility"
+            ]
+          }
         ]
       }
     ]
@@ -54,6 +54,10 @@
     {
       "source": "/old-intro",
       "destination": "/introduction"
+    },
+    {
+      "source": "/concepts/:slug*",
+      "destination": "/api/:slug*"
     }
   ]
 }
