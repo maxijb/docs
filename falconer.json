@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "site": {
+    "name": "BitSetJS",
+    "favicon": "favicon.svg",
+    "colors": {
+      "primary": "#2563EB",
+      "primaryDark": "#DBEAFE"
+    },
+    "navbar": {
+      "primary": {
+        "label": "GitHub",
+        "href": "https://github.com/maxijb/BitSetJS"
+      }
+    },
+    "contextual": {
+      "options": [
+        "copy",
+        "assistant",
+        "chatgpt",
+        "claude"
+      ]
+    },
+    "seo": {
+      "indexable": true
+    },
+    "social": []
+  },
+  "navigation": {
+    "redirects": [
+      {
+        "from": "/old-intro",
+        "to": "/introduction"
+      },
+      {
+        "from": "/concepts/:slug*",
+        "to": "/api/:slug*"
+      }
+    ],
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "pages": [
+          "api/utilities.mdx",
+          "quickstart.mdx",
+          "introduction.mdx",
+          "installation.mdx"
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "pages": [
+          "concepts/bitset-basics.mdx",
+          "guides/memory-model.mdx",
+          "api/constructor.mdx",
+          "api/bit-operations.mdx",
+          "api/serialization.mdx"
+        ]
+      },
+      {
+        "tab": "How-to Guides",
+        "pages": [
+          "guides/browser-usage.mdx",
+          "guides/commonjs-usage.mdx",
+          {
+            "group": "Advanced",
+            "pages": [
+              "guides/es5-compatibility.mdx"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
